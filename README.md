@@ -14,6 +14,8 @@ Each power skill also produces a topic-specific learning objective and three mea
 
 Sprint 4 has started with device-local draft management. Teachers can save multiple generated lessons in the current browser, reload them after refreshing, and delete drafts they no longer need. Drafts do not leave the device or require an account.
 
+Saved drafts can also be renamed and duplicated, making it easier to preserve a working version before adapting it for another class or lesson length.
+
 ## Printable summary
 
 After generating lesson direction, select **Open printable summary**. The summary carries forward the grade, subject, topic, power skill, standard, duration, inquiry question, and all six instructional stages. Select **Print / Save as PDF**, then choose the browser's PDF destination.

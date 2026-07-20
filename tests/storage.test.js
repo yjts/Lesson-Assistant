@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DRAFT_STORAGE_KEY, DraftStorageError, deleteDraft, getDraft, listDrafts, saveDraft } from "../src/storage.js";
+import { DRAFT_STORAGE_KEY, DraftStorageError, deleteDraft, duplicateDraft, getDraft, listDrafts, renameDraft, saveDraft } from "../src/storage.js";
 
 function memoryStorage(initial = {}) {
   const values = new Map(Object.entries(initial));
@@ -35,3 +35,22 @@ test("reports corrupted local draft data", () => {
   assert.throws(() => listDrafts(storage), DraftStorageError);
 });
 
+test("renames a draft without changing its content or creation time", () => {
+  const storage = memoryStorage();
+  saveDraft(storage, lesson, { id: "draft-1", name: "Original", now: "2026-07-20T10:00:00.000Z" });
+  const renamed = renameDraft(storage, "draft-1", "  Civil Protest Lesson  ", "2026-07-21T10:00:00.000Z");
+  assert.equal(renamed.name, "Civil Protest Lesson");
+  assert.equal(renamed.createdAt, "2026-07-20T10:00:00.000Z");
+  assert.equal(renamed.lesson.topic, lesson.topic);
+  assert.throws(() => renameDraft(storage, "draft-1", "  "), DraftStorageError);
+});
+
+test("duplicates a draft under a new identity", () => {
+  const storage = memoryStorage();
+  saveDraft(storage, lesson, { id: "draft-1", name: "Original", now: "2026-07-20T10:00:00.000Z" });
+  const duplicate = duplicateDraft(storage, "draft-1", { id: "draft-2", now: "2026-07-21T10:00:00.000Z" });
+  assert.equal(duplicate.id, "draft-2");
+  assert.equal(duplicate.name, "Original (copy)");
+  assert.deepEqual(duplicate.lesson, lesson);
+  assert.equal(listDrafts(storage).length, 2);
+});

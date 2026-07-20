@@ -146,6 +146,14 @@ This log records material setup, development, testing, and delivery errors encou
 - **Response:** Inspected fresh page state instead of retrying blindly. The draft list showed `No saved drafts` and the status announced that the draft was deleted.
 - **Status:** Test data was removed successfully; no application defect remained.
 
+### Automated rename prompt did not open reliably
+
+- **Operation:** Browser-test the Rename action for a saved draft.
+- **Observed error:** Semantic and ID-based automated clicks did not expose the JavaScript prompt to the automation session.
+- **Cause:** The in-app browser's dialog translation did not consistently surface the prompt after the synthetic click.
+- **Response:** Verified rename behavior through storage-layer tests, verified the visible enabled Rename control in the browser, and avoided repeated prompt automation. Duplicate and cleanup flows were tested through the live interface.
+- **Status:** Core rename logic passes automated tests. Manual prompt interaction remains part of the next usability pass.
+
 ## Current open issues
 
 - GitHub write authentication is not configured, so local commits cannot yet be pushed.

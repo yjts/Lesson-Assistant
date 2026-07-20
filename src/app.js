@@ -2,7 +2,7 @@ import { generateLesson } from "./generator.js?v=0.5.0";
 import { createAppState, initialLessonInput } from "./state.js?v=0.5.0";
 import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.5.0";
 import { validateLessonInput } from "./validation.js?v=0.5.0";
-import { deleteDraft, getDraft, listDrafts, saveDraft } from "./storage.js?v=0.5.0";
+import { deleteDraft, duplicateDraft, getDraft, listDrafts, renameDraft, saveDraft } from "./storage.js?v=0.6.0";
 
 const form = document.querySelector("#lesson-form");
 const fields = Object.fromEntries(["grade", "subject", "topic", "skill", "standard", "duration"].map((id) => [id, document.querySelector(`#${id}`)]));
@@ -11,6 +11,8 @@ const draftControls = {
   select: document.querySelector("#draft-select"),
   save: document.querySelector("#save-draft"),
   load: document.querySelector("#load-draft"),
+  rename: document.querySelector("#rename-draft"),
+  duplicate: document.querySelector("#duplicate-draft"),
   delete: document.querySelector("#delete-draft"),
   status: document.querySelector("#draft-status")
 };
@@ -149,10 +151,14 @@ function refreshDraftList(selectedId = "") {
     draftControls.select.replaceChildren(...options);
     const hasSelection = Boolean(draftControls.select.value);
     draftControls.load.disabled = !hasSelection;
+    draftControls.rename.disabled = !hasSelection;
+    draftControls.duplicate.disabled = !hasSelection;
     draftControls.delete.disabled = !hasSelection;
   } catch (error) {
     draftControls.select.replaceChildren(new Option("Drafts unavailable", ""));
     draftControls.load.disabled = true;
+    draftControls.rename.disabled = true;
+    draftControls.duplicate.disabled = true;
     draftControls.delete.disabled = true;
     setDraftStatus(error.message, true);
   }
@@ -173,6 +179,8 @@ function restoreLessonInput(lesson) {
 draftControls.select.addEventListener("change", () => {
   const hasSelection = Boolean(draftControls.select.value);
   draftControls.load.disabled = !hasSelection;
+  draftControls.rename.disabled = !hasSelection;
+  draftControls.duplicate.disabled = !hasSelection;
   draftControls.delete.disabled = !hasSelection;
 });
 
@@ -195,6 +203,30 @@ draftControls.load.addEventListener("click", () => {
     restoreLessonInput(draft.lesson);
     setDraftStatus(`Loaded “${draft.name}”.`);
     document.querySelector("#lesson-result").focus();
+  } catch (error) {
+    setDraftStatus(error.message, true);
+  }
+});
+
+draftControls.rename.addEventListener("click", () => {
+  try {
+    const draft = getDraft(localStorage, draftControls.select.value);
+    if (!draft) return setDraftStatus("The selected draft could not be found.", true);
+    const nextName = window.prompt("Rename this lesson draft:", draft.name);
+    if (nextName === null) return;
+    const renamed = renameDraft(localStorage, draft.id, nextName);
+    refreshDraftList(renamed.id);
+    setDraftStatus(`Renamed draft to “${renamed.name}”.`);
+  } catch (error) {
+    setDraftStatus(error.message, true);
+  }
+});
+
+draftControls.duplicate.addEventListener("click", () => {
+  try {
+    const duplicate = duplicateDraft(localStorage, draftControls.select.value);
+    refreshDraftList(duplicate.id);
+    setDraftStatus(`Created “${duplicate.name}”.`);
   } catch (error) {
     setDraftStatus(error.message, true);
   }

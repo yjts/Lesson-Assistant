@@ -70,3 +70,20 @@ export function deleteDraft(storage, id) {
   return true;
 }
 
+export function renameDraft(storage, id, name, now = new Date().toISOString()) {
+  const trimmedName = name.trim();
+  if (!trimmedName) throw new DraftStorageError("Enter a name for the draft.");
+  const existing = getDraft(storage, id);
+  if (!existing) throw new DraftStorageError("The selected draft could not be found.");
+  return saveDraft(storage, existing.lesson, { id, name: trimmedName, now });
+}
+
+export function duplicateDraft(storage, id, options = {}) {
+  const existing = getDraft(storage, id);
+  if (!existing) throw new DraftStorageError("The selected draft could not be found.");
+  return saveDraft(storage, existing.lesson, {
+    id: options.id,
+    name: options.name || `${existing.name} (copy)`,
+    now: options.now
+  });
+}
