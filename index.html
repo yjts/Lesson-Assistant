@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Build standards-aligned inquiry lesson direction." />
+    <title>Inquiry Lesson Direction Builder</title>
+    <link rel="stylesheet" href="styles/base.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Lesson Assistant</p>
+        <h1>Inquiry Lesson Direction Builder</h1>
+        <p>A focused planning tool for inquiry and mastery-based lessons.</p>
+      </div>
+      <span class="badge">Sprint 0 prototype</span>
+    </header>
+
+    <main class="page">
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow">Plan with purpose</p>
+        <h2 id="hero-title">Build lesson direction in minutes</h2>
+        <p>Choose a topic, grade, and power skill. The tool creates a practical structure showing what the teacher does, what students do, and how mastery is checked.</p>
+      </section>
+
+      <div class="workspace">
+        <aside class="card input-panel">
+          <form id="lesson-form">
+            <div class="section-heading">
+              <div><p class="eyebrow">Step 1</p><h2>Lesson inputs</h2></div>
+              <span>All fields required</span>
+            </div>
+
+            <label for="grade">Grade level</label>
+            <select id="grade" name="grade"></select>
+
+            <label for="subject">Subject</label>
+            <select id="subject" name="subject"></select>
+
+            <label for="topic">Topic</label>
+            <input id="topic" name="topic" value="Boston Tea Party" maxlength="120" required />
+
+            <label for="skill">Power skill</label>
+            <select id="skill" name="skill"></select>
+
+            <label for="standard">Academic standard</label>
+            <select id="standard" name="standard"></select>
+
+            <label for="duration">Lesson length</label>
+            <select id="duration" name="duration">
+              <option value="45">45 minutes</option>
+              <option value="60" selected>60 minutes</option>
+              <option value="75">75 minutes</option>
+              <option value="90">90 minutes</option>
+            </select>
+
+            <p id="form-error" class="form-error" role="alert" hidden></p>
+            <button class="primary-button" type="submit">Generate lesson direction</button>
+            <p class="helper">This tool provides direction, not a finished lesson. Review wording, sources, and supports for your students.</p>
+          </form>
+        </aside>
+
+        <section class="card result-panel" aria-labelledby="result-title" aria-live="polite">
+          <div class="section-heading">
+            <div><p class="eyebrow">Step 2</p><h2 id="result-title">Lesson direction</h2></div>
+            <span id="result-status" class="status">Ready to review</span>
+          </div>
+
+          <dl class="summary" id="summary"></dl>
+
+          <section class="inquiry-block" aria-labelledby="inquiry-label">
+            <p id="inquiry-label">Inquiry question</p>
+            <h3 id="inquiry-question"></h3>
+          </section>
+
+          <div class="table-heading">
+            <div><p class="eyebrow">Instructional flow</p><h3>Teacher and student roles</h3></div>
+            <span>6 stages</span>
+          </div>
+          <div class="table-scroll" tabindex="0" aria-label="Generated instructional structure">
+            <table>
+              <thead><tr><th>Stage</th><th>Teacher action</th><th>Student action</th><th id="example-heading">Example</th></tr></thead>
+              <tbody id="structure-rows"></tbody>
+            </table>
+          </div>
+
+          <div class="takeaway"><strong>Teacher takeaway</strong><p>The content stays central, while students investigate, make claims, apply learning, and demonstrate mastery.</p></div>
+        </section>
+      </div>
+    </main>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
+
