@@ -1,5 +1,6 @@
 import { generateLesson } from "./generator.js";
 import { getStandards, grades, subjects, powerSkills } from "./standards.js";
+import { validateLessonInput } from "./validation.js";
 
 const form = document.querySelector("#lesson-form");
 const fields = Object.fromEntries(["grade", "subject", "topic", "skill", "standard", "duration"].map((id) => [id, document.querySelector(`#${id}`)]));
@@ -60,20 +61,25 @@ function render(lesson) {
     });
     return row;
   }));
-  document.querySelector("#result-status").textContent = "Ready to review";
+  document.querySelector("#result-status").textContent = `Generated ${lesson.topic}. Ready to review.`;
 }
 
 function generateFromForm(event) {
   event?.preventDefault();
   const error = document.querySelector("#form-error");
-  if (!fields.topic.value.trim()) {
-    error.textContent = "Enter a topic before generating lesson direction.";
+  const input = readInput();
+  const validation = validateLessonInput(input);
+  Object.values(fields).forEach((field) => field.removeAttribute("aria-invalid"));
+  if (!validation.valid) {
+    error.textContent = validation.message;
     error.hidden = false;
-    fields.topic.focus();
+    fields[validation.field].setAttribute("aria-invalid", "true");
+    fields[validation.field].focus();
     return;
   }
   error.hidden = true;
-  render(generateLesson(readInput()));
+  render(generateLesson(input));
+  if (event) document.querySelector("#lesson-result").focus();
 }
 
 addOptions(fields.grade, grades, "Grade 8");
@@ -84,4 +90,3 @@ fields.grade.addEventListener("change", updateStandards);
 fields.subject.addEventListener("change", updateStandards);
 form.addEventListener("submit", generateFromForm);
 generateFromForm();
-

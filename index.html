@@ -8,13 +8,14 @@
     <link rel="stylesheet" href="styles/base.css" />
   </head>
   <body>
+    <a class="skip-link" href="#lesson-form">Skip to lesson inputs</a>
     <header class="topbar">
       <div>
         <p class="eyebrow">Lesson Assistant</p>
         <h1>Inquiry Lesson Direction Builder</h1>
         <p>A focused planning tool for inquiry and mastery-based lessons.</p>
       </div>
-      <span class="badge">Sprint 0 prototype</span>
+      <span class="badge">Sprint 1 in progress</span>
     </header>
 
     <main class="page">
@@ -26,7 +27,7 @@
 
       <div class="workspace">
         <aside class="card input-panel">
-          <form id="lesson-form">
+          <form id="lesson-form" novalidate>
             <div class="section-heading">
               <div><p class="eyebrow">Step 1</p><h2>Lesson inputs</h2></div>
               <span>All fields required</span>
@@ -39,7 +40,8 @@
             <select id="subject" name="subject"></select>
 
             <label for="topic">Topic</label>
-            <input id="topic" name="topic" value="Boston Tea Party" maxlength="120" required />
+            <input id="topic" name="topic" value="Boston Tea Party" maxlength="120" required aria-describedby="topic-help form-error" />
+            <p id="topic-help" class="field-help">Use a specific event, concept, era, or civic issue.</p>
 
             <label for="skill">Power skill</label>
             <select id="skill" name="skill"></select>
@@ -61,10 +63,10 @@
           </form>
         </aside>
 
-        <section class="card result-panel" aria-labelledby="result-title" aria-live="polite">
+        <section id="lesson-result" class="card result-panel" aria-labelledby="result-title" tabindex="-1">
           <div class="section-heading">
             <div><p class="eyebrow">Step 2</p><h2 id="result-title">Lesson direction</h2></div>
-            <span id="result-status" class="status">Ready to review</span>
+            <span id="result-status" class="status" role="status" aria-live="polite">Ready to review</span>
           </div>
 
           <dl class="summary" id="summary"></dl>
@@ -80,6 +82,7 @@
           </div>
           <div class="table-scroll" tabindex="0" aria-label="Generated instructional structure">
             <table>
+              <caption>A six-stage inquiry lesson direction with separate teacher actions, student actions, and topic examples.</caption>
               <thead><tr><th>Stage</th><th>Teacher action</th><th>Student action</th><th id="example-heading">Example</th></tr></thead>
               <tbody id="structure-rows"></tbody>
             </table>
@@ -93,4 +96,3 @@
     <script type="module" src="src/app.js"></script>
   </body>
 </html>
-
