@@ -16,6 +16,10 @@ Build a responsive teacher-planning application that turns a grade level, subjec
 
 In a few minutes, a teacher can produce, revise, save, and export a standards-aligned lesson direction showing the inquiry question, teacher actions, student actions, evidence-based learning, and mastery check.
 
+### Current implementation status
+
+The Sprint 0 baseline and core Sprint 1 accessibility work are implemented locally. The printable-summary portion originally scheduled for Sprint 5 was brought forward: completed selections now open a dedicated summary page with a Print / Save as PDF action and letter-size print styling. Draft persistence and teacher editing remain future work.
+
 ## 2. MVP Boundary
 
 ### Include in the MVP

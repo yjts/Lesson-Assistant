@@ -62,6 +62,15 @@ function render(lesson) {
     return row;
   }));
   document.querySelector("#result-status").textContent = `Generated ${lesson.topic}. Ready to review.`;
+  const parameters = new URLSearchParams({
+    grade: lesson.grade,
+    subject: lesson.subject,
+    topic: lesson.topic,
+    skill: lesson.skill,
+    standard: lesson.standard,
+    duration: String(lesson.duration)
+  });
+  document.querySelector("#summary-link").href = `summary.html?${parameters}`;
 }
 
 function generateFromForm(event) {

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Printable inquiry lesson direction summary." />
+    <title>Lesson Direction Summary</title>
+    <link rel="stylesheet" href="styles/base.css" />
+    <link rel="stylesheet" href="styles/print.css" />
+  </head>
+  <body class="summary-page">
+    <header class="summary-toolbar" aria-label="Summary actions">
+      <a class="back-link" href="index.html">← Back to lesson builder</a>
+      <button id="print-button" class="primary-button print-button" type="button">Print / Save as PDF</button>
+    </header>
+
+    <main id="printable-summary" class="print-sheet" tabindex="-1">
+      <section id="summary-error" class="summary-error" role="alert" hidden>
+        <h1>Summary unavailable</h1>
+        <p>The lesson selections are missing or invalid. Return to the builder and generate the lesson again.</p>
+        <a class="secondary-button" href="index.html">Return to lesson builder</a>
+      </section>
+
+      <article id="summary-content">
+        <header class="print-header">
+          <div>
+            <p class="eyebrow">Lesson Assistant</p>
+            <h1 id="summary-title">Lesson Direction Summary</h1>
+            <p>Inquiry and mastery-based planning guide</p>
+          </div>
+          <div class="print-mark">Teacher planning summary</div>
+        </header>
+
+        <dl id="print-metadata" class="print-metadata"></dl>
+
+        <section class="print-inquiry" aria-labelledby="print-inquiry-label">
+          <p id="print-inquiry-label">Inquiry question</p>
+          <h2 id="print-inquiry-question"></h2>
+        </section>
+
+        <section aria-labelledby="structure-title">
+          <div class="print-section-heading">
+            <div><p class="eyebrow">Instructional flow</p><h2 id="structure-title">Teacher and student roles</h2></div>
+            <span>6 stages</span>
+          </div>
+          <div id="print-stages" class="print-stages"></div>
+        </section>
+
+        <section class="print-takeaway">
+          <h2>Teacher takeaway</h2>
+          <p>The content stays central, while students investigate, make claims, apply learning, and demonstrate mastery.</p>
+        </section>
+
+        <footer class="print-footer">
+          <p>This document provides lesson direction, not a finished lesson. Review wording, sources, accessibility supports, and instructional decisions for your students.</p>
+        </footer>
+      </article>
+    </main>
+    <script type="module" src="src/summary.js"></script>
+  </body>
+</html>
+
