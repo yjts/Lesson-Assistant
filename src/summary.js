@@ -1,5 +1,5 @@
-import { generateLesson } from "./generator.js";
-import { validateLessonInput } from "./validation.js";
+import { generateLesson } from "./generator.js?v=0.2.0";
+import { validateLessonInput } from "./validation.js?v=0.2.0";
 
 const params = new URLSearchParams(window.location.search);
 const input = {
@@ -63,4 +63,3 @@ if (!validation.valid || !input.grade || !input.subject || !input.skill || !Numb
 }
 
 document.querySelector("#print-button").addEventListener("click", () => window.print());
-

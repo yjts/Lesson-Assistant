@@ -96,6 +96,14 @@ This log records material setup, development, testing, and delivery errors encou
 - **Verification:** The field receives focus, `aria-invalid="true"`, and the expected error message; a subsequent valid submission clears the error and focuses the result.
 - **Status:** Resolved as a testing-diagnostic issue, not an application defect.
 
+### Browser loaded a stale standards module during Sprint 2 verification
+
+- **Operation:** Load the state-management and standards-provenance increment.
+- **Observed error:** `The requested module './standards.js' does not provide an export named 'standardsCatalogMeta'`.
+- **Cause:** The simple local server returned a previously cached copy of `standards.js` while loading the updated `app.js`, leaving incompatible module versions in the same page load.
+- **Response:** Added a shared application-version query to browser module imports so static deployments and the local server request a consistent module version.
+- **Status:** Resolved; rechecked initial rendering and browser console after cache-busting.
+
 ## 2026-07-20 — Git history and delivery
 
 ### Git author identity was missing
@@ -119,4 +127,3 @@ This log records material setup, development, testing, and delivery errors encou
 - GitHub write authentication is not configured, so local commits cannot yet be pushed.
 - The project uses Codex's bundled Node executable in this environment because `node` and `npm` are not globally available.
 - Curriculum standards still require educator review and authoritative source/version metadata before release.
-

@@ -1,9 +1,11 @@
-import { generateLesson } from "./generator.js";
-import { getStandards, grades, subjects, powerSkills } from "./standards.js";
-import { validateLessonInput } from "./validation.js";
+import { generateLesson } from "./generator.js?v=0.2.0";
+import { createAppState, initialLessonInput } from "./state.js?v=0.2.0";
+import { getStandards, grades, subjects, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.2.0";
+import { validateLessonInput } from "./validation.js?v=0.2.0";
 
 const form = document.querySelector("#lesson-form");
 const fields = Object.fromEntries(["grade", "subject", "topic", "skill", "standard", "duration"].map((id) => [id, document.querySelector(`#${id}`)]));
+const appState = createAppState();
 
 function addOptions(select, items, selected) {
   select.replaceChildren(...items.map((item) => {
@@ -33,6 +35,12 @@ function readInput() {
   };
 }
 
+function syncInputState() {
+  const nextState = appState.updateInput(readInput());
+  document.body.dataset.appState = nextState.status;
+  document.querySelector("#result-status").textContent = "Selections changed. Generate to refresh the lesson.";
+}
+
 function summaryItem(label, value) {
   const wrapper = document.createElement("div");
   const term = document.createElement("dt");
@@ -44,6 +52,7 @@ function summaryItem(label, value) {
 }
 
 function render(lesson) {
+  appState.setLesson(lesson);
   document.querySelector("#summary").replaceChildren(
     summaryItem("Grade", lesson.grade), summaryItem("Subject", lesson.subject),
     summaryItem("Power skill", lesson.skill), summaryItem("Standard", lesson.standard),
@@ -71,6 +80,7 @@ function render(lesson) {
     duration: String(lesson.duration)
   });
   document.querySelector("#summary-link").href = `summary.html?${parameters}`;
+  document.body.dataset.appState = appState.get().status;
 }
 
 function generateFromForm(event) {
@@ -91,11 +101,13 @@ function generateFromForm(event) {
   if (event) document.querySelector("#lesson-result").focus();
 }
 
-addOptions(fields.grade, grades, "Grade 8");
-addOptions(fields.subject, subjects, "U.S. History");
-addOptions(fields.skill, powerSkills, "Cause and Effect");
+addOptions(fields.grade, grades, initialLessonInput.grade);
+addOptions(fields.subject, subjects, initialLessonInput.subject);
+addOptions(fields.skill, powerSkills, initialLessonInput.skill);
 updateStandards();
-fields.grade.addEventListener("change", updateStandards);
-fields.subject.addEventListener("change", updateStandards);
+document.querySelector("#standards-source").textContent = `${standardsCatalogMeta.framework} · educator verification pending`;
+fields.grade.addEventListener("change", () => { updateStandards(); syncInputState(); });
+fields.subject.addEventListener("change", () => { updateStandards(); syncInputState(); });
+Object.values(fields).forEach((field) => field.addEventListener("input", syncInputState));
 form.addEventListener("submit", generateFromForm);
 generateFromForm();

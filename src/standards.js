@@ -1,5 +1,14 @@
 export const grades = ["Grade 6", "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
 
+export const standardsCatalogMeta = Object.freeze({
+  framework: "California History-Social Science Content Standards",
+  jurisdiction: "California",
+  sourceUrl: "https://www.cde.ca.gov/be/st/ss/",
+  catalogVersion: "prototype-2026-07-20",
+  lastReviewed: null,
+  educatorVerified: false
+});
+
 export const subjects = ["U.S. History", "World History", "American Government", "Economics", "World Geography"];
 
 export const powerSkills = [
@@ -43,4 +52,3 @@ export function getStandards(grade, subject) {
   const practices = ["Grade 6", "Grade 7", "Grade 8"].includes(grade) ? practiceStandards.middle : practiceStandards.high;
   return [...(gradeStandards[grade] || []), ...practices];
 }
-

@@ -4,7 +4,7 @@ An open-source, browser-native prototype that creates inquiry-based lesson direc
 
 ## Current status
 
-Sprint 1: the supplied concept has been repaired and separated into maintainable HTML, CSS, data, generation, validation, and interface modules. The interface includes responsive behavior, keyboard navigation support, accessible validation, result announcements, and a described lesson table. Teachers can open a dedicated summary from their completed selections and print it or save it as a PDF. Generated content is deterministic and does not require an AI service.
+Sprint 2 is in progress: the supplied concept has been repaired and separated into maintainable HTML, CSS, state, curriculum data, generation, validation, and interface modules. The interface includes responsive behavior, keyboard navigation support, accessible validation, result announcements, and a described lesson table. Teachers can open a dedicated summary from their completed selections and print it or save it as a PDF. Application state now distinguishes edited selections from generated output, and the unverified standards catalog is visibly labeled. Generated content is deterministic and does not require an AI service.
 
 ## Printable summary
 
