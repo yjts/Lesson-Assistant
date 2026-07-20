@@ -15,7 +15,7 @@
         <h1>Inquiry Lesson Direction Builder</h1>
         <p>A focused planning tool for inquiry and mastery-based lessons.</p>
       </div>
-      <span class="badge">Sprint 3 in progress</span>
+      <span class="badge">Sprint 4 in progress</span>
     </header>
 
     <main class="page">
@@ -61,6 +61,17 @@
             <p id="form-error" class="form-error" role="alert" hidden></p>
             <button class="primary-button" type="submit">Generate lesson direction</button>
             <p class="helper">This tool provides direction, not a finished lesson. Review wording, sources, and supports for your students.</p>
+
+            <section class="draft-panel" aria-labelledby="draft-title">
+              <div class="draft-heading"><h3 id="draft-title">Saved drafts</h3><button id="save-draft" class="text-button" type="button">Save current</button></div>
+              <label class="sr-only" for="draft-select">Saved lesson drafts</label>
+              <select id="draft-select" aria-describedby="draft-status"><option value="">No saved drafts</option></select>
+              <div class="draft-actions">
+                <button id="load-draft" class="secondary-button" type="button" disabled>Load</button>
+                <button id="delete-draft" class="danger-button" type="button" disabled>Delete</button>
+              </div>
+              <p id="draft-status" class="draft-status" role="status" aria-live="polite">Drafts are stored only in this browser.</p>
+            </section>
           </form>
         </aside>
 

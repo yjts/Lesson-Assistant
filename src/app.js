@@ -1,11 +1,19 @@
-import { generateLesson } from "./generator.js?v=0.4.0";
-import { createAppState, initialLessonInput } from "./state.js?v=0.4.0";
-import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.4.0";
-import { validateLessonInput } from "./validation.js?v=0.4.0";
+import { generateLesson } from "./generator.js?v=0.5.0";
+import { createAppState, initialLessonInput } from "./state.js?v=0.5.0";
+import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.5.0";
+import { validateLessonInput } from "./validation.js?v=0.5.0";
+import { deleteDraft, getDraft, listDrafts, saveDraft } from "./storage.js?v=0.5.0";
 
 const form = document.querySelector("#lesson-form");
 const fields = Object.fromEntries(["grade", "subject", "topic", "skill", "standard", "duration"].map((id) => [id, document.querySelector(`#${id}`)]));
 const appState = createAppState();
+const draftControls = {
+  select: document.querySelector("#draft-select"),
+  save: document.querySelector("#save-draft"),
+  load: document.querySelector("#load-draft"),
+  delete: document.querySelector("#delete-draft"),
+  status: document.querySelector("#draft-status")
+};
 
 function addOptions(select, items, selected) {
   select.replaceChildren(...items.map((item) => {
@@ -117,6 +125,94 @@ function generateFromForm(event) {
   if (event) document.querySelector("#lesson-result").focus();
 }
 
+function setDraftStatus(message, isError = false) {
+  draftControls.status.textContent = message;
+  draftControls.status.classList.toggle("is-error", isError);
+}
+
+function refreshDraftList(selectedId = "") {
+  try {
+    const drafts = listDrafts(localStorage);
+    const options = drafts.map((draft) => {
+      const option = document.createElement("option");
+      option.value = draft.id;
+      option.textContent = `${draft.name} · ${new Date(draft.updatedAt).toLocaleDateString()}`;
+      option.selected = draft.id === selectedId;
+      return option;
+    });
+    if (!options.length) {
+      const empty = document.createElement("option");
+      empty.value = "";
+      empty.textContent = "No saved drafts";
+      options.push(empty);
+    }
+    draftControls.select.replaceChildren(...options);
+    const hasSelection = Boolean(draftControls.select.value);
+    draftControls.load.disabled = !hasSelection;
+    draftControls.delete.disabled = !hasSelection;
+  } catch (error) {
+    draftControls.select.replaceChildren(new Option("Drafts unavailable", ""));
+    draftControls.load.disabled = true;
+    draftControls.delete.disabled = true;
+    setDraftStatus(error.message, true);
+  }
+}
+
+function restoreLessonInput(lesson) {
+  fields.grade.value = lesson.grade;
+  updateSubjects();
+  fields.subject.value = lesson.subject;
+  updateStandards();
+  fields.topic.value = lesson.topic;
+  fields.skill.value = lesson.skill;
+  fields.standard.value = lesson.standard;
+  fields.duration.value = String(lesson.duration);
+  generateFromForm();
+}
+
+draftControls.select.addEventListener("change", () => {
+  const hasSelection = Boolean(draftControls.select.value);
+  draftControls.load.disabled = !hasSelection;
+  draftControls.delete.disabled = !hasSelection;
+});
+
+draftControls.save.addEventListener("click", () => {
+  const lesson = appState.get().lesson;
+  if (!lesson) return setDraftStatus("Generate a valid lesson before saving a draft.", true);
+  try {
+    const draft = saveDraft(localStorage, lesson);
+    refreshDraftList(draft.id);
+    setDraftStatus(`Saved “${draft.name}” on this device.`);
+  } catch (error) {
+    setDraftStatus(error.message, true);
+  }
+});
+
+draftControls.load.addEventListener("click", () => {
+  try {
+    const draft = getDraft(localStorage, draftControls.select.value);
+    if (!draft) return setDraftStatus("The selected draft could not be found.", true);
+    restoreLessonInput(draft.lesson);
+    setDraftStatus(`Loaded “${draft.name}”.`);
+    document.querySelector("#lesson-result").focus();
+  } catch (error) {
+    setDraftStatus(error.message, true);
+  }
+});
+
+draftControls.delete.addEventListener("click", () => {
+  const selectedId = draftControls.select.value;
+  const selectedLabel = draftControls.select.selectedOptions[0]?.textContent || "this draft";
+  if (!selectedId || !window.confirm(`Delete ${selectedLabel}? This cannot be undone.`)) return;
+  try {
+    deleteDraft(localStorage, selectedId);
+    refreshDraftList();
+    setDraftStatus("Draft deleted from this device.");
+  } catch (error) {
+    setDraftStatus(error.message, true);
+  }
+});
+
 addOptions(fields.grade, grades, initialLessonInput.grade);
 addOptions(fields.subject, getSubjects(initialLessonInput.grade), initialLessonInput.subject);
 addOptions(fields.skill, powerSkills, initialLessonInput.skill);
@@ -127,3 +223,4 @@ fields.subject.addEventListener("change", () => { updateStandards(); syncInputSt
 Object.values(fields).forEach((field) => field.addEventListener("input", syncInputState));
 form.addEventListener("submit", generateFromForm);
 generateFromForm();
+refreshDraftList();

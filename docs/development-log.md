@@ -138,6 +138,14 @@ This log records material setup, development, testing, and delivery errors encou
 - **Response:** Kept all work in local commits and continued development without exposing or embedding a token.
 - **Status:** Open; same delivery blocker as above.
 
+### Draft-delete browser click timed out after completing
+
+- **Operation:** Delete the temporary draft created during persistence testing.
+- **Observed error:** Browser automation timed out while translating the click event for the Delete button.
+- **Cause:** The confirmation-triggering click completed in the page, but the automation layer did not receive its normal completion signal before timing out.
+- **Response:** Inspected fresh page state instead of retrying blindly. The draft list showed `No saved drafts` and the status announced that the draft was deleted.
+- **Status:** Test data was removed successfully; no application defect remained.
+
 ## Current open issues
 
 - GitHub write authentication is not configured, so local commits cannot yet be pushed.

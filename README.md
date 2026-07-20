@@ -12,11 +12,15 @@ Sprint 3 has started with deterministic duration-aware planning. Each 45-, 60-, 
 
 Each power skill also produces a topic-specific learning objective and three measurable success criteria. These outcomes appear in both the working lesson direction and printable summary.
 
+Sprint 4 has started with device-local draft management. Teachers can save multiple generated lessons in the current browser, reload them after refreshing, and delete drafts they no longer need. Drafts do not leave the device or require an account.
+
 ## Printable summary
 
 After generating lesson direction, select **Open printable summary**. The summary carries forward the grade, subject, topic, power skill, standard, duration, inquiry question, and all six instructional stages. Select **Print / Save as PDF**, then choose the browser's PDF destination.
 
 The selections are encoded in the summary page URL for this prototype. Do not include student information or other sensitive data in lesson topics.
+
+Browser drafts are also local to the current browser profile and may be lost if site data is cleared. They are not synchronized across devices.
 
 ## Run locally
 
