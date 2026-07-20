@@ -104,6 +104,14 @@ This log records material setup, development, testing, and delivery errors encou
 - **Response:** Added a shared application-version query to browser module imports so static deployments and the local server request a consistent module version.
 - **Status:** Resolved; rechecked initial rendering and browser console after cache-busting.
 
+### Stage timing displayed as `undefined` during Sprint 3 verification
+
+- **Operation:** Add duration-aware timing to the six generated lesson stages.
+- **Observed defect:** The updated table rendered `undefined min` for every stage.
+- **Cause:** Browser imports still used the `0.2.0` cache key, so the updated interface loaded alongside a cached generator without timing data.
+- **Response:** Bumped the shared browser-module query version to `0.3.0` across the builder, summary, validation, state, and standards imports.
+- **Status:** Resolved and rechecked in both the builder and printable summary.
+
 ## 2026-07-20 — Git history and delivery
 
 ### Git author identity was missing

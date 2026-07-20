@@ -16,6 +16,12 @@ test("summary provides print and recovery actions", () => {
   assert.match(summaryHtml, /href="index\.html"/);
 });
 
+test("summary script renders stage timing", async () => {
+  const summaryScript = await readFile(new URL("../src/summary.js", import.meta.url), "utf8");
+  assert.match(summaryScript, /stage\[4\].*min/);
+  assert.match(summaryScript, /print-stage-heading/);
+});
+
 test("print stylesheet defines print media and letter output", () => {
   assert.match(printCss, /@media print/);
   assert.match(printCss, /@page\{size:letter/);

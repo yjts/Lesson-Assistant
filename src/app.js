@@ -1,7 +1,7 @@
-import { generateLesson } from "./generator.js?v=0.2.0";
-import { createAppState, initialLessonInput } from "./state.js?v=0.2.0";
-import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.2.0";
-import { validateLessonInput } from "./validation.js?v=0.2.0";
+import { generateLesson } from "./generator.js?v=0.3.0";
+import { createAppState, initialLessonInput } from "./state.js?v=0.3.0";
+import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.3.0";
+import { validateLessonInput } from "./validation.js?v=0.3.0";
 
 const form = document.querySelector("#lesson-form");
 const fields = Object.fromEntries(["grade", "subject", "topic", "skill", "standard", "duration"].map((id) => [id, document.querySelector(`#${id}`)]));
@@ -69,10 +69,13 @@ function render(lesson) {
   document.querySelector("#example-heading").textContent = `${lesson.topic} example`;
   document.querySelector("#structure-rows").replaceChildren(...lesson.stages.map((stage) => {
     const row = document.createElement("tr");
-    stage.forEach((value, index) => {
+    const displayValues = [stage[0], `${stage[4]} min`, stage[1], stage[2], stage[3]];
+    displayValues.forEach((value, index) => {
       const cell = document.createElement("td");
       if (index === 0) { const strong = document.createElement("strong"); strong.textContent = value; cell.append(strong); }
+      else if (index === 1) cell.className = "time-cell";
       else cell.textContent = value;
+      if (index === 1) cell.textContent = value;
       row.append(cell);
     });
     return row;

@@ -1,5 +1,5 @@
-import { generateLesson } from "./generator.js?v=0.2.0";
-import { validateLessonInput } from "./validation.js?v=0.2.0";
+import { generateLesson } from "./generator.js?v=0.3.0";
+import { validateLessonInput } from "./validation.js?v=0.3.0";
 
 const params = new URLSearchParams(window.location.search);
 const input = {
@@ -24,8 +24,13 @@ function metadataItem(label, value) {
 function stageCard(stage) {
   const card = document.createElement("section");
   card.className = "print-stage";
+  const headingRow = document.createElement("div");
+  headingRow.className = "print-stage-heading";
   const title = document.createElement("h3");
   title.textContent = stage[0];
+  const timing = document.createElement("span");
+  timing.textContent = `${stage[4]} min`;
+  headingRow.append(title, timing);
   const content = document.createElement("div");
   [["Teacher", stage[1]], ["Student", stage[2]], ["Example", stage[3]]].forEach(([label, value]) => {
     const block = document.createElement("div");
@@ -36,7 +41,7 @@ function stageCard(stage) {
     block.append(heading, text);
     content.append(block);
   });
-  card.append(title, content);
+  card.append(headingRow, content);
   return card;
 }
 
