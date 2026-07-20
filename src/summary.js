@@ -1,5 +1,5 @@
-import { generateLesson } from "./generator.js?v=0.3.0";
-import { validateLessonInput } from "./validation.js?v=0.3.0";
+import { generateLesson } from "./generator.js?v=0.4.0";
+import { validateLessonInput } from "./validation.js?v=0.4.0";
 
 const params = new URLSearchParams(window.location.search);
 const input = {
@@ -54,6 +54,12 @@ function renderSummary(lesson) {
     metadataItem("Duration", `${lesson.duration} minutes`)
   );
   document.querySelector("#print-inquiry-question").textContent = lesson.inquiryQuestion;
+  document.querySelector("#print-objective").textContent = lesson.objective;
+  document.querySelector("#print-success-criteria").replaceChildren(...lesson.successCriteria.map((criterion) => {
+    const item = document.createElement("li");
+    item.textContent = criterion;
+    return item;
+  }));
   document.querySelector("#print-stages").replaceChildren(...lesson.stages.map(stageCard));
 }
 

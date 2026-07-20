@@ -22,6 +22,11 @@ test("summary script renders stage timing", async () => {
   assert.match(summaryScript, /print-stage-heading/);
 });
 
+test("summary includes objective and success criteria regions", () => {
+  assert.match(summaryHtml, /id="print-objective"/);
+  assert.match(summaryHtml, /id="print-success-criteria"/);
+});
+
 test("print stylesheet defines print media and letter output", () => {
   assert.match(printCss, /@media print/);
   assert.match(printCss, /@page\{size:letter/);

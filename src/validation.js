@@ -1,4 +1,4 @@
-import { getSubjects, hasStandard } from "./standards.js?v=0.3.0";
+import { getSubjects, hasStandard } from "./standards.js?v=0.4.0";
 
 export function validateLessonInput(input) {
   const topic = input.topic.trim();

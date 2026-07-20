@@ -12,6 +12,32 @@ const questionTemplates = {
   "Chronological Thinking": (topic) => `Which sequence of events is essential to understanding ${topic}?`
 };
 
+const skillOutcomes = Object.freeze({
+  "Chronological Thinking": { action: "sequence the key events in", evidence: "explain how the order of events shaped the outcome" },
+  "Cause and Effect": { action: "analyze the major causes and effects of", evidence: "connect at least one cause to a supported result" },
+  "Change Over Time": { action: "explain how and why change occurred during", evidence: "compare an earlier and later condition using evidence" },
+  "Historical Perspective": { action: "compare perspectives on", evidence: "support two distinct viewpoints with contextual evidence" },
+  "Source Analysis": { action: "evaluate sources related to", evidence: "identify source evidence, perspective, and a meaningful limitation" },
+  "Evidence-Based Claims": { action: "construct an evidence-based claim about", evidence: "state a defensible claim and support it with relevant evidence" },
+  "Citizenship": { action: "explain the citizenship lessons within", evidence: "connect a civic principle to a specific example" },
+  "Civic Participation": { action: "evaluate forms of civic participation in", evidence: "assess how a public action influenced an outcome" },
+  "Rights and Responsibilities": { action: "analyze rights and responsibilities connected to", evidence: "explain a tension between a right and a responsibility" },
+  "Discussion and Debate": { action: "evaluate competing arguments about", evidence: "respond to a counterargument using relevant evidence" },
+  "Argumentation": { action: "develop and defend an interpretation of", evidence: "present a claim, evidence, and clear reasoning" }
+});
+
+export function buildLearningOutcome(topic, skill) {
+  const outcome = skillOutcomes[skill] || skillOutcomes["Evidence-Based Claims"];
+  return {
+    objective: `Students will ${outcome.action} ${topic}.`,
+    successCriteria: [
+      `Identify accurate and relevant information about ${topic}.`,
+      `Use evidence to ${outcome.evidence}.`,
+      "Explain the reasoning independently using complete ideas."
+    ]
+  };
+}
+
 const timingTemplates = Object.freeze({
   45: [5, 7, 11, 8, 8, 6],
   60: [6, 9, 16, 10, 11, 8],
@@ -32,12 +58,14 @@ export function buildInquiryQuestion(topic, skill) {
 export function generateLesson(input) {
   const topic = input.topic.trim();
   const inquiryQuestion = buildInquiryQuestion(topic, input.skill);
+  const learningOutcome = buildLearningOutcome(topic, input.skill);
   const timings = getStageTimings(input.duration);
   return {
     ...input,
     topic,
     inquiryQuestion,
-    templateVersion: "0.3.0",
+    ...learningOutcome,
+    templateVersion: "0.4.0",
     stages: [
       ["1. Inquiry opener", "Show an image, quotation, or opening question.", "Think independently and give an initial response.", inquiryQuestion],
       ["2. Short instruction", `Give the essential background for ${topic}.`, "Listen and identify the central issue.", `Provide only the context students need to begin investigating ${topic}.`],

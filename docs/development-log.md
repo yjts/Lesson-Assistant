@@ -130,6 +130,14 @@ This log records material setup, development, testing, and delivery errors encou
 - **Response:** Preserved all work in local commits and continued development without retrying destructive or insecure credential workarounds.
 - **Status:** Open delivery blocker. Configure a GitHub credential helper, SSH key, or GitHub CLI login before pushing. Do not place a personal access token in source files or the remote URL.
 
+### Push retry remained unauthenticated
+
+- **Operation:** Retry `git push -u origin codex/work` after the user asked to continue.
+- **Observed error:** `could not read Username for 'https://github.com': Device not configured`.
+- **Cause:** No GitHub HTTPS credential, credential helper entry, GitHub CLI login, or SSH key had been added since the prior attempt.
+- **Response:** Kept all work in local commits and continued development without exposing or embedding a token.
+- **Status:** Open; same delivery blocker as above.
+
 ## Current open issues
 
 - GitHub write authentication is not configured, so local commits cannot yet be pushed.

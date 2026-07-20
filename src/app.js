@@ -1,7 +1,7 @@
-import { generateLesson } from "./generator.js?v=0.3.0";
-import { createAppState, initialLessonInput } from "./state.js?v=0.3.0";
-import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.3.0";
-import { validateLessonInput } from "./validation.js?v=0.3.0";
+import { generateLesson } from "./generator.js?v=0.4.0";
+import { createAppState, initialLessonInput } from "./state.js?v=0.4.0";
+import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.4.0";
+import { validateLessonInput } from "./validation.js?v=0.4.0";
 
 const form = document.querySelector("#lesson-form");
 const fields = Object.fromEntries(["grade", "subject", "topic", "skill", "standard", "duration"].map((id) => [id, document.querySelector(`#${id}`)]));
@@ -66,6 +66,12 @@ function render(lesson) {
     summaryItem("Duration", `${lesson.duration} minutes`)
   );
   document.querySelector("#inquiry-question").textContent = lesson.inquiryQuestion;
+  document.querySelector("#learning-objective").textContent = lesson.objective;
+  document.querySelector("#success-criteria").replaceChildren(...lesson.successCriteria.map((criterion) => {
+    const item = document.createElement("li");
+    item.textContent = criterion;
+    return item;
+  }));
   document.querySelector("#example-heading").textContent = `${lesson.topic} example`;
   document.querySelector("#structure-rows").replaceChildren(...lesson.stages.map((stage) => {
     const row = document.createElement("tr");

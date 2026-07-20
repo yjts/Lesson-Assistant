@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildInquiryQuestion, generateLesson, getStageTimings } from "../src/generator.js";
+import { buildInquiryQuestion, buildLearningOutcome, generateLesson, getStageTimings } from "../src/generator.js";
 import { powerSkills } from "../src/standards.js";
 
 test("builds a skill-specific inquiry question", () => {
@@ -29,5 +29,15 @@ test("every power skill produces a topic-specific question", () => {
     const question = buildInquiryQuestion("Reconstruction", skill);
     assert.match(question, /Reconstruction/);
     assert.ok(question.endsWith("?"));
+  }
+});
+
+test("every power skill produces a measurable learning outcome", () => {
+  for (const skill of powerSkills) {
+    const outcome = buildLearningOutcome("Reconstruction", skill);
+    assert.match(outcome.objective, /^Students will /);
+    assert.match(outcome.objective, /Reconstruction/);
+    assert.equal(outcome.successCriteria.length, 3);
+    assert.ok(outcome.successCriteria.every((criterion) => criterion.endsWith(".")));
   }
 });

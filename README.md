@@ -10,6 +10,8 @@ Grade selections now narrow the available subjects and standards using a documen
 
 Sprint 3 has started with deterministic duration-aware planning. Each 45-, 60-, 75-, or 90-minute lesson now divides the available time across the inquiry opener, short instruction, investigation, evidence-based thinking, application, and mastery check. The stage timings also appear in the printable summary.
 
+Each power skill also produces a topic-specific learning objective and three measurable success criteria. These outcomes appear in both the working lesson direction and printable summary.
+
 ## Printable summary
 
 After generating lesson direction, select **Open printable summary**. The summary carries forward the grade, subject, topic, power skill, standard, duration, inquiry question, and all six instructional stages. Select **Print / Save as PDF**, then choose the browser's PDF destination.
