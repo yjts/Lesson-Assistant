@@ -11,6 +11,20 @@ export const standardsCatalogMeta = Object.freeze({
 
 export const subjects = ["U.S. History", "World History", "American Government", "Economics", "World Geography"];
 
+export const subjectsByGrade = Object.freeze({
+  "Grade 6": ["World History"],
+  "Grade 7": ["World History"],
+  "Grade 8": ["U.S. History"],
+  "Grade 9": ["World Geography"],
+  "Grade 10": ["World History"],
+  "Grade 11": ["U.S. History"],
+  "Grade 12": ["American Government", "Economics"]
+});
+
+export function getSubjects(grade) {
+  return [...(subjectsByGrade[grade] || [])];
+}
+
 export const powerSkills = [
   "Chronological Thinking", "Cause and Effect", "Change Over Time", "Historical Perspective",
   "Source Analysis", "Evidence-Based Claims", "Citizenship", "Civic Participation",
@@ -45,10 +59,15 @@ const grade12 = {
 };
 
 export function getStandards(grade, subject) {
+  if (!getSubjects(grade).includes(subject)) return [];
   if (grade === "Grade 12") {
     const content = subject === "Economics" ? grade12.economics : grade12.government;
     return [...content, ...practiceStandards.high];
   }
   const practices = ["Grade 6", "Grade 7", "Grade 8"].includes(grade) ? practiceStandards.middle : practiceStandards.high;
   return [...(gradeStandards[grade] || []), ...practices];
+}
+
+export function hasStandard(grade, subject, code) {
+  return getStandards(grade, subject).some(([standardCode]) => standardCode === code);
 }

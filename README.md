@@ -6,6 +6,8 @@ An open-source, browser-native prototype that creates inquiry-based lesson direc
 
 Sprint 2 is in progress: the supplied concept has been repaired and separated into maintainable HTML, CSS, state, curriculum data, generation, validation, and interface modules. The interface includes responsive behavior, keyboard navigation support, accessible validation, result announcements, and a described lesson table. Teachers can open a dedicated summary from their completed selections and print it or save it as a PDF. Application state now distinguishes edited selections from generated output, and the unverified standards catalog is visibly labeled. Generated content is deterministic and does not require an AI service.
 
+Grade selections now narrow the available subjects and standards using a documented provisional mapping. Mismatched grade, subject, standard, and duration combinations are rejected before generation. These mappings remain pending educator verification.
+
 ## Printable summary
 
 After generating lesson direction, select **Open printable summary**. The summary carries forward the grade, subject, topic, power skill, standard, duration, inquiry question, and all six instructional stages. Select **Print / Save as PDF**, then choose the browser's PDF destination.

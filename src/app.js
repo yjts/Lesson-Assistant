@@ -1,6 +1,6 @@
 import { generateLesson } from "./generator.js?v=0.2.0";
 import { createAppState, initialLessonInput } from "./state.js?v=0.2.0";
-import { getStandards, grades, subjects, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.2.0";
+import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.2.0";
 import { validateLessonInput } from "./validation.js?v=0.2.0";
 
 const form = document.querySelector("#lesson-form");
@@ -22,6 +22,13 @@ function updateStandards() {
   const previous = fields.standard.value;
   const options = getStandards(fields.grade.value, fields.subject.value);
   addOptions(fields.standard, options, options.some(([code]) => code === previous) ? previous : fields.grade.value === "Grade 8" ? "CA HSS 8.1" : undefined);
+}
+
+function updateSubjects() {
+  const previous = fields.subject.value;
+  const options = getSubjects(fields.grade.value);
+  addOptions(fields.subject, options, options.includes(previous) ? previous : options[0]);
+  updateStandards();
 }
 
 function readInput() {
@@ -102,11 +109,11 @@ function generateFromForm(event) {
 }
 
 addOptions(fields.grade, grades, initialLessonInput.grade);
-addOptions(fields.subject, subjects, initialLessonInput.subject);
+addOptions(fields.subject, getSubjects(initialLessonInput.grade), initialLessonInput.subject);
 addOptions(fields.skill, powerSkills, initialLessonInput.skill);
 updateStandards();
 document.querySelector("#standards-source").textContent = `${standardsCatalogMeta.framework} · educator verification pending`;
-fields.grade.addEventListener("change", () => { updateStandards(); syncInputState(); });
+fields.grade.addEventListener("change", () => { updateSubjects(); syncInputState(); });
 fields.subject.addEventListener("change", () => { updateStandards(); syncInputState(); });
 Object.values(fields).forEach((field) => field.addEventListener("input", syncInputState));
 form.addEventListener("submit", generateFromForm);

@@ -28,3 +28,16 @@ Before a pilot release:
 - Unverified data must be labeled as pending educator verification.
 - AI output must never create or silently alter an academic-standard code.
 
+## Provisional grade-to-subject mapping
+
+| Grade | Subjects shown in the prototype |
+|---|---|
+| 6 | World History |
+| 7 | World History |
+| 8 | U.S. History |
+| 9 | World Geography |
+| 10 | World History |
+| 11 | U.S. History |
+| 12 | American Government; Economics |
+
+This mapping prevents obviously mismatched selections, such as Grade 8 Economics. It remains provisional and must be confirmed by an educator before pilot release. Grade 9 currently exposes only the shared 9–12 historical-analysis practice standards and particularly needs curriculum review.
