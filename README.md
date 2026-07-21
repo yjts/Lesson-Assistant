@@ -41,9 +41,10 @@ Open `http://localhost:4173`.
 ```sh
 npm run check
 npm test
+npm run test:e2e
 ```
 
-GitHub Actions runs both commands on every push and pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the review checklist and local browser workflow.
+Install the Chromium test browser once with `npx playwright install chromium`. GitHub Actions runs syntax, unit, and Chromium workflow tests on every push and pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the review checklist and local browser workflow.
 
 ## Project principles
 

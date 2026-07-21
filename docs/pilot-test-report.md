@@ -6,8 +6,9 @@ Candidate branch: `codex/work`
 ## Automated verification
 
 - JavaScript syntax checks cover all application modules.
-- 37 tests cover generation, timing, standards filtering and provenance, validation, state, editable draft persistence, schema migration, backup/restore safeguards, content-free diagnostics, print structure, accessibility contracts, and the primary save-and-restore workflow.
-- Current result: 37 passed, 0 failed.
+- 37 unit and contract tests cover generation, timing, standards filtering and provenance, validation, state, editable draft persistence, schema migration, backup/restore safeguards, content-free diagnostics, print structure, accessibility contracts, and the primary save-and-restore workflow.
+- 3 Playwright Chromium tests cover the complete edit/save/reload/summary handoff, 390-pixel overflow containment, and diagnostics viewing/clearing.
+- Current result: 40 checks passed, 0 failed.
 
 ## Live workflow verification
 
@@ -33,6 +34,7 @@ Manual screen-reader testing with VoiceOver or NVDA and a complete WCAG 2.2 AA a
 |---|---|
 | Codex in-app Chromium, desktop | Primary workflow passed |
 | Codex in-app Chromium, 390 × 844 phone viewport | Passed; page width equals viewport and table scroll remains contained |
+| Playwright Chromium | 3 automated workflows passed locally and run in CI |
 | Chrome current | Pilot check required |
 | Edge current | Pilot check required |
 | Firefox current | Pilot check required |

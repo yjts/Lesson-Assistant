@@ -14,6 +14,7 @@ test("state tracks editing and generated transitions", () => {
   const state = createAppState();
   state.updateInput({ topic: "Constitutional Convention" });
   assert.equal(state.get().status, "editing");
+  assert.equal(state.get().dirty, false);
   state.setLesson({ ...state.get().input, inquiryQuestion: "Why?", stages: [] });
   assert.equal(state.get().status, "generated");
   assert.equal(state.get().lesson.topic, "Constitutional Convention");
@@ -23,4 +24,6 @@ test("state tracks editing and generated transitions", () => {
   state.markSaved("draft-1");
   assert.equal(state.get().dirty, false);
   assert.equal(state.get().activeDraftId, "draft-1");
+  state.updateInput({ topic: "A different lesson" });
+  assert.equal(state.get().dirty, false);
 });

@@ -21,6 +21,8 @@ Requirements:
 ```sh
 npm run check
 npm test
+npx playwright install chromium
+npm run test:e2e
 python3 -m http.server 4173
 ```
 
@@ -32,11 +34,15 @@ For interface changes, exercise generate, edit, save, reload, printable summary,
 
 - The change has one observable teacher outcome.
 - Logic changes include tests.
-- `npm run check` and `npm test` pass.
+- `npm run check`, `npm test`, and `npm run test:e2e` pass.
 - Teacher-entered text is rendered with safe text APIs.
 - Keyboard focus, labels, live announcements, and phone overflow were considered.
 - Draft schema changes include migration and backup compatibility.
 - Curriculum language remains pending educator review unless approval is documented.
 - No dependency was added without a necessity, maintenance, and license review.
 
-GitHub Actions runs the same syntax and test commands on every push and pull request. Static publishing is intentionally not part of CI until deployment is approved and configured.
+GitHub Actions runs the same syntax, unit, and Chromium workflow tests on every push and pull request. Static publishing is intentionally not part of CI until deployment is approved and configured.
+
+## Development dependency decision
+
+`@playwright/test` is pinned as a development-only dependency for browser workflow coverage. Playwright is Apache-2.0 licensed and is not shipped to teachers or required by the application at runtime. CI installs only Chromium to keep download and execution costs bounded; Firefox and WebKit remain explicit release-matrix checks.

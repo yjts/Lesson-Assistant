@@ -3,7 +3,7 @@
 ## P0 — Required before teacher pilot
 
 - Educator verifies every supported standard and shortened description; authoritative source provenance and source-check dates are now recorded.
-- Run the primary workflow in current Chrome, Edge, Firefox, and Safari.
+- Run the primary workflow in branded Chrome, Edge, Firefox, and Safari; automated Chromium coverage is now in CI.
 - Complete VoiceOver or NVDA keyboard and announcement testing.
 - Confirm backup and restore on a second browser profile.
 

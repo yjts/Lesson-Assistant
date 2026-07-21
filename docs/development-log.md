@@ -161,6 +161,27 @@ This log records material setup, development, testing, and delivery errors encou
 
 Authoritative CDE source, adoption, page-review, and application source-check metadata are now recorded. Educator verification of every shortened description and local grade/subject mapping remains open.
 
+## 2026-07-21 — Automated browser workflow coverage
+
+### Changing lesson selections triggered an incorrect overwrite warning
+
+- **Observed defect:** The first Playwright primary-workflow run changed the topic and power skill, then Generate opened an unsaved-teacher-edits confirmation even though generated content had not been edited.
+- **Cause:** Input selection changes reused the lesson-content `dirty` flag.
+- **Response:** Kept selection changes in the `editing` status without marking teacher-authored lesson content dirty. Direct edits continue to set the dirty flag and retain overwrite protection.
+- **Status:** Resolved and covered by state and browser workflow tests.
+
+### Playwright could not initially find Node on this development machine
+
+- **Observed error:** `./node_modules/.bin/playwright: line 41: exec: node: not found` while installing Chromium.
+- **Cause:** The shell does not expose system Node, matching the existing runtime limitation.
+- **Response:** Ran Playwright with the Codex bundled Node directory on `PATH`; Chromium, its headless shell, and FFmpeg installed successfully.
+- **Status:** Local workaround verified. GitHub Actions uses standard Node 20 and is unaffected.
+
+### Browser workflow automation became a development dependency
+
+- **Decision:** Pinned `@playwright/test` 1.61.0 as development-only, with Apache-2.0 licensing recorded in `CONTRIBUTING.md`. It is not part of the teacher-facing runtime.
+- **Scope:** CI installs Chromium only. The tests cover teacher edits through printable summary, phone overflow containment, and privacy-safe diagnostics.
+
 ## 2026-07-21 — Standards provenance pass
 
 ### Framework and content-standard provenance were conflated

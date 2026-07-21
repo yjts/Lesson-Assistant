@@ -1,5 +1,5 @@
 import { generateLesson } from "./generator.js?v=0.7.0";
-import { createAppState, initialLessonInput } from "./state.js?v=0.7.0";
+import { createAppState, initialLessonInput } from "./state.js?v=0.11.0";
 import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.9.0";
 import { validateLessonInput } from "./validation.js?v=0.9.0";
 import { clearDiagnostics, readDiagnostics, recordDiagnostic } from "./diagnostics.js?v=0.10.0";

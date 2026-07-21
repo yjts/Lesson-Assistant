@@ -1,5 +1,5 @@
 import { generateLesson } from "./generator.js?v=0.7.0";
-import { validateLessonInput } from "./validation.js?v=0.7.0";
+import { validateLessonInput } from "./validation.js?v=0.11.0";
 
 const SUMMARY_STORAGE_KEY = "lesson-assistant:print-summary:v1";
 

@@ -14,7 +14,7 @@ export function createAppState(seed = initialLessonInput) {
       return structuredClone(current);
     },
     updateInput(patch) {
-      current = { ...current, input: { ...current.input, ...patch }, status: "editing", dirty: Boolean(current.lesson) };
+      current = { ...current, input: { ...current.input, ...patch }, status: "editing" };
       return this.get();
     },
     setLesson(lesson, options = {}) {
