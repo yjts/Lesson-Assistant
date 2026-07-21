@@ -1,7 +1,7 @@
 import { generateLesson } from "./generator.js?v=0.7.0";
 import { createAppState, initialLessonInput } from "./state.js?v=0.7.0";
-import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.7.0";
-import { validateLessonInput } from "./validation.js?v=0.7.0";
+import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.9.0";
+import { validateLessonInput } from "./validation.js?v=0.9.0";
 import { recordDiagnostic } from "./diagnostics.js?v=0.8.0";
 import { deleteDraft, duplicateDraft, exportDraftBackup, getDraft, importDraftBackup, listDrafts, renameDraft, saveDraft } from "./storage.js?v=0.8.0";
 
@@ -365,7 +365,8 @@ addOptions(fields.grade, grades, initialLessonInput.grade);
 addOptions(fields.subject, getSubjects(initialLessonInput.grade), initialLessonInput.subject);
 addOptions(fields.skill, powerSkills, initialLessonInput.skill);
 updateStandards();
-document.querySelector("#standards-source").textContent = `${standardsCatalogMeta.framework} · educator verification pending`;
+document.querySelector("#standards-source").textContent = `${standardsCatalogMeta.framework} · source checked ${standardsCatalogMeta.sourceCheckedAt} · educator approval pending`;
+document.querySelector("#standards-source-link").href = standardsCatalogMeta.contentStandardsSourceUrl;
 fields.grade.addEventListener("change", () => { updateSubjects(); syncInputState(); });
 fields.subject.addEventListener("change", () => { updateStandards(); syncInputState(); });
 Object.values(fields).forEach((field) => field.addEventListener("input", syncInputState));

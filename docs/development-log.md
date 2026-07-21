@@ -157,7 +157,18 @@ This log records material setup, development, testing, and delivery errors encou
 ## Current open issues
 
 - The project uses Codex's bundled Node executable in this environment because `node` and `npm` are not globally available.
-- Curriculum standards still require educator review and authoritative source/version metadata before release.
+- Curriculum standards still require educator review of shortened descriptions and local grade/subject mappings before release.
+
+Authoritative CDE source, adoption, page-review, and application source-check metadata are now recorded. Educator verification of every shortened description and local grade/subject mapping remains open.
+
+## 2026-07-21 — Standards provenance pass
+
+### Framework and content-standard provenance were conflated
+
+- **Observed risk:** The catalog linked only a broad standards landing page and did not distinguish the state-adopted content standards from the 2016 implementation framework.
+- **Response:** Recorded the official Appendix C content-standards PDF, the framework page, both adoption dates, the CDE page-review date, and the application source-check date. Added a direct official-source link beside the standard selector.
+- **Verification:** Representative Grade 6, Grade 8, Grade 11, Grade 12 Government, Grade 12 Economics, and grade-span analysis-skill structures were checked against CDE Appendix C.
+- **Status:** Source provenance resolved. Every locally shortened description and grade/subject mapping still requires educator approval.
 
 ## 2026-07-21 — Sprint 6 engineering pass
 

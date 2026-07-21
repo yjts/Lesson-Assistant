@@ -1,6 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getStandards, getSubjects, hasStandard } from "../src/standards.js";
+import { getStandards, getSubjects, hasStandard, standardsCatalogMeta } from "../src/standards.js";
+
+test("catalog records authoritative source provenance without claiming educator approval", () => {
+  assert.equal(standardsCatalogMeta.frameworkAdopted, "July 14, 2016");
+  assert.equal(standardsCatalogMeta.sourceCheckedAt, "2026-07-21");
+  assert.match(standardsCatalogMeta.contentStandardsSourceUrl, /cde\.ca\.gov\/ci\/hs\/cf\/documents\/hssappendixc\.pdf/);
+  assert.match(standardsCatalogMeta.descriptionPolicy, /shortened summaries/);
+  assert.equal(standardsCatalogMeta.educatorVerified, false);
+  assert.equal(standardsCatalogMeta.lastReviewed, null);
+});
 
 test("Grade 8 includes content and historical practice standards", () => {
   const codes = getStandards("Grade 8", "U.S. History").map(([code]) => code);

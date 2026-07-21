@@ -9,6 +9,7 @@ test("provides a keyboard skip link and labeled form controls", () => {
   for (const id of ["grade", "subject", "topic", "skill", "standard", "duration"]) {
     assert.match(html, new RegExp(`<label for="${id}">`));
   }
+  assert.match(html, /id="standards-source-link"[^>]*>Official CDE standards<\/a>/);
 });
 
 test("announces errors and generated status", () => {

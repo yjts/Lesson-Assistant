@@ -3,8 +3,14 @@ export const grades = ["Grade 6", "Grade 7", "Grade 8", "Grade 9", "Grade 10", "
 export const standardsCatalogMeta = Object.freeze({
   framework: "California History-Social Science Content Standards",
   jurisdiction: "California",
-  sourceUrl: "https://www.cde.ca.gov/be/st/ss/",
-  catalogVersion: "prototype-2026-07-20",
+  contentStandardsSourceUrl: "https://www.cde.ca.gov/ci/hs/cf/documents/hssappendixc.pdf",
+  frameworkSourceUrl: "https://www.cde.ca.gov/ci/hs/cf/hssframework.asp",
+  contentStandardsAdopted: "October 1998",
+  frameworkAdopted: "July 14, 2016",
+  sourcePageLastReviewed: "November 6, 2025",
+  sourceCheckedAt: "2026-07-21",
+  descriptionPolicy: "Locally shortened summaries; consult the official source for complete standard text.",
+  catalogVersion: "source-checked-2026-07-21",
   lastReviewed: null,
   educatorVerified: false
 });
