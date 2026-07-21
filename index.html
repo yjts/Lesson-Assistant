@@ -15,7 +15,7 @@
         <h1>Inquiry Lesson Direction Builder</h1>
         <p>A focused planning tool for inquiry and mastery-based lessons.</p>
       </div>
-      <span class="badge">Sprints 4–5 complete</span>
+      <span class="badge">Pilot candidate</span>
     </header>
 
     <main class="page">
@@ -73,8 +73,13 @@
                 <button id="rename-draft" class="secondary-button" type="button" disabled>Rename</button>
                 <button id="duplicate-draft" class="secondary-button" type="button" disabled>Duplicate</button>
                 <button id="delete-draft" class="danger-button" type="button" disabled>Delete</button>
+                <button id="backup-drafts" class="secondary-button" type="button">Backup</button>
+                <button id="restore-drafts" class="secondary-button" type="button">Restore</button>
               </div>
+              <label class="sr-only" for="restore-file">Choose a Lesson Assistant backup file</label>
+              <input id="restore-file" class="sr-only" type="file" accept="application/json,.json" />
               <p id="draft-status" class="draft-status" role="status" aria-live="polite">Drafts are stored only in this browser.</p>
+              <p class="draft-status">Back up drafts before clearing browser data. Local diagnostics contain only error codes and times.</p>
             </section>
           </form>
         </aside>

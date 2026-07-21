@@ -2,7 +2,8 @@ import { generateLesson } from "./generator.js?v=0.7.0";
 import { createAppState, initialLessonInput } from "./state.js?v=0.7.0";
 import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.7.0";
 import { validateLessonInput } from "./validation.js?v=0.7.0";
-import { deleteDraft, duplicateDraft, getDraft, listDrafts, renameDraft, saveDraft } from "./storage.js?v=0.7.0";
+import { recordDiagnostic } from "./diagnostics.js?v=0.8.0";
+import { deleteDraft, duplicateDraft, exportDraftBackup, getDraft, importDraftBackup, listDrafts, renameDraft, saveDraft } from "./storage.js?v=0.8.0";
 
 const SUMMARY_STORAGE_KEY = "lesson-assistant:print-summary:v1";
 
@@ -17,6 +18,9 @@ const draftControls = {
   rename: document.querySelector("#rename-draft"),
   duplicate: document.querySelector("#duplicate-draft"),
   delete: document.querySelector("#delete-draft"),
+  backup: document.querySelector("#backup-drafts"),
+  restore: document.querySelector("#restore-drafts"),
+  restoreFile: document.querySelector("#restore-file"),
   status: document.querySelector("#draft-status")
 };
 
@@ -120,7 +124,7 @@ function render(lesson, options = {}) {
     standard: lesson.standard,
     duration: String(lesson.duration)
   });
-  try { sessionStorage.setItem(SUMMARY_STORAGE_KEY, JSON.stringify(lesson)); } catch {}
+  try { sessionStorage.setItem(SUMMARY_STORAGE_KEY, JSON.stringify(lesson)); } catch { recordDiagnostic(localStorage, "summary-handoff-failed"); }
   document.querySelector("#summary-link").href = `summary.html?${parameters}`;
   document.body.dataset.appState = appState.get().status;
 }
@@ -183,6 +187,7 @@ function refreshDraftList(selectedId = "") {
     draftControls.duplicate.disabled = true;
     draftControls.delete.disabled = true;
     setDraftStatus(error.message, true);
+    recordDiagnostic(localStorage, "drafts-unavailable");
   }
 }
 
@@ -220,7 +225,7 @@ function recordTeacherEdit() {
   const lesson = readEditedLesson();
   if (!lesson) return;
   appState.editLesson(lesson);
-  try { sessionStorage.setItem(SUMMARY_STORAGE_KEY, JSON.stringify(lesson)); } catch {}
+  try { sessionStorage.setItem(SUMMARY_STORAGE_KEY, JSON.stringify(lesson)); } catch { recordDiagnostic(localStorage, "summary-handoff-failed"); }
   document.querySelector("#result-status").textContent = "Teacher edits not yet saved.";
 }
 
@@ -248,6 +253,7 @@ draftControls.save.addEventListener("click", () => {
     setDraftStatus(`Saved “${draft.name}” on this device.`);
   } catch (error) {
     setDraftStatus(error.message, true);
+    recordDiagnostic(localStorage, "draft-save-failed");
   }
 });
 
@@ -264,6 +270,7 @@ draftControls.saveAs.addEventListener("click", () => {
     setDraftStatus(`Saved new draft “${draft.name}”.`);
   } catch (error) {
     setDraftStatus(error.message, true);
+    recordDiagnostic(localStorage, "draft-save-failed");
   }
 });
 
@@ -277,6 +284,7 @@ draftControls.load.addEventListener("click", () => {
     document.querySelector("#lesson-result").focus();
   } catch (error) {
     setDraftStatus(error.message, true);
+    recordDiagnostic(localStorage, "draft-load-failed");
   }
 });
 
@@ -291,6 +299,39 @@ draftControls.rename.addEventListener("click", () => {
     setDraftStatus(`Renamed draft to “${renamed.name}”.`);
   } catch (error) {
     setDraftStatus(error.message, true);
+    recordDiagnostic(localStorage, "draft-save-failed");
+  }
+});
+
+draftControls.backup.addEventListener("click", () => {
+  try {
+    const blob = new Blob([exportDraftBackup(localStorage)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `lesson-assistant-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    setDraftStatus("Draft backup downloaded. Store it somewhere you can find later.");
+  } catch (error) {
+    setDraftStatus(error.message, true);
+    recordDiagnostic(localStorage, "backup-export-failed");
+  }
+});
+
+draftControls.restore.addEventListener("click", () => draftControls.restoreFile.click());
+draftControls.restoreFile.addEventListener("change", async () => {
+  const file = draftControls.restoreFile.files?.[0];
+  if (!file) return;
+  try {
+    const result = importDraftBackup(localStorage, await file.text());
+    refreshDraftList();
+    setDraftStatus(`Backup restored. ${result.total} draft${result.total === 1 ? "" : "s"} available on this device.`);
+  } catch (error) {
+    setDraftStatus(error.message, true);
+    recordDiagnostic(localStorage, "backup-import-failed");
+  } finally {
+    draftControls.restoreFile.value = "";
   }
 });
 
@@ -301,6 +342,7 @@ draftControls.duplicate.addEventListener("click", () => {
     setDraftStatus(`Created “${duplicate.name}”.`);
   } catch (error) {
     setDraftStatus(error.message, true);
+    recordDiagnostic(localStorage, "draft-save-failed");
   }
 });
 
@@ -315,6 +357,7 @@ draftControls.delete.addEventListener("click", () => {
     setDraftStatus("Draft deleted from this device.");
   } catch (error) {
     setDraftStatus(error.message, true);
+    recordDiagnostic(localStorage, "draft-delete-failed");
   }
 });
 
@@ -341,3 +384,6 @@ window.addEventListener("beforeunload", (event) => {
   event.preventDefault();
   event.returnValue = "";
 });
+
+window.addEventListener("error", () => recordDiagnostic(localStorage, "app-error"));
+window.addEventListener("unhandledrejection", () => recordDiagnostic(localStorage, "app-error"));

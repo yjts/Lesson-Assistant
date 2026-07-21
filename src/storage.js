@@ -1,5 +1,6 @@
 export const DRAFT_STORAGE_KEY = "lesson-assistant:drafts:v1";
 export const DRAFT_SCHEMA_VERSION = 2;
+export const DRAFT_BACKUP_FORMAT = "lesson-assistant-draft-backup";
 
 export class DraftStorageError extends Error {
   constructor(message, cause) {
@@ -102,4 +103,40 @@ export function duplicateDraft(storage, id, options = {}) {
     name: options.name || `${existing.name} (copy)`,
     now: options.now
   });
+}
+
+export function exportDraftBackup(storage, now = new Date().toISOString()) {
+  return JSON.stringify({
+    format: DRAFT_BACKUP_FORMAT,
+    version: DRAFT_SCHEMA_VERSION,
+    exportedAt: now,
+    drafts: listDrafts(storage)
+  }, null, 2);
+}
+
+export function importDraftBackup(storage, value) {
+  let backup;
+  try {
+    backup = JSON.parse(value);
+  } catch (error) {
+    throw new DraftStorageError("The selected backup is not valid JSON.", error);
+  }
+  if (backup?.format !== DRAFT_BACKUP_FORMAT || ![1, DRAFT_SCHEMA_VERSION].includes(backup.version) || !Array.isArray(backup.drafts)) {
+    throw new DraftStorageError("The selected file is not a supported Lesson Assistant backup.");
+  }
+  const store = parseStore(storage.getItem(DRAFT_STORAGE_KEY));
+  const byId = new Map(store.drafts.map((draft) => [draft.id, draft]));
+  backup.drafts.forEach((draft) => {
+    if (!draft?.id || !draft?.lesson || !draft?.createdAt || !draft?.updatedAt) return;
+    const migrated = { ...draft, schemaVersion: DRAFT_SCHEMA_VERSION, lesson: migrateLesson(draft.lesson) };
+    const existing = byId.get(draft.id);
+    if (!existing || migrated.updatedAt > existing.updatedAt) byId.set(draft.id, migrated);
+  });
+  const merged = { version: DRAFT_SCHEMA_VERSION, drafts: [...byId.values()] };
+  try {
+    storage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(merged));
+  } catch (error) {
+    throw new DraftStorageError("The backup could not be restored on this device.", error);
+  }
+  return { imported: merged.drafts.length - store.drafts.length, total: merged.drafts.length };
 }

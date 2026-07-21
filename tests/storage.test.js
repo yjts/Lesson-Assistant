@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DRAFT_SCHEMA_VERSION, DRAFT_STORAGE_KEY, DraftStorageError, deleteDraft, duplicateDraft, getDraft, listDrafts, renameDraft, saveDraft } from "../src/storage.js";
+import { DRAFT_SCHEMA_VERSION, DRAFT_STORAGE_KEY, DraftStorageError, deleteDraft, duplicateDraft, exportDraftBackup, getDraft, importDraftBackup, listDrafts, renameDraft, saveDraft } from "../src/storage.js";
 
 function memoryStorage(initial = {}) {
   const values = new Map(Object.entries(initial));
@@ -61,4 +61,24 @@ test("duplicates a draft under a new identity", () => {
   assert.equal(duplicate.name, "Original (copy)");
   assert.deepEqual(duplicate.lesson, { ...lesson, teacherNotes: "", sourceReminder: "Confirm that all classroom sources are accessible, age-appropriate, and accurately represented." });
   assert.equal(listDrafts(storage).length, 2);
+});
+
+test("exports and restores a portable draft backup", () => {
+  const source = memoryStorage();
+  saveDraft(source, { ...lesson, teacherNotes: "Bring printed sources." }, { id: "draft-1", now: "2026-07-20T10:00:00.000Z" });
+  const backup = exportDraftBackup(source, "2026-07-21T10:00:00.000Z");
+  assert.doesNotMatch(backup, /diagnostic/i);
+  const destination = memoryStorage();
+  assert.deepEqual(importDraftBackup(destination, backup), { imported: 1, total: 1 });
+  assert.equal(getDraft(destination, "draft-1").lesson.teacherNotes, "Bring printed sources.");
+  assert.throws(() => importDraftBackup(destination, "not json"), DraftStorageError);
+});
+
+test("restore keeps the newest copy when draft identities collide", () => {
+  const storage = memoryStorage();
+  saveDraft(storage, { ...lesson, topic: "Newer local lesson" }, { id: "draft-1", now: "2026-07-22T10:00:00.000Z" });
+  const olderSource = memoryStorage();
+  saveDraft(olderSource, { ...lesson, topic: "Older backup lesson" }, { id: "draft-1", now: "2026-07-20T10:00:00.000Z" });
+  importDraftBackup(storage, exportDraftBackup(olderSource));
+  assert.equal(getDraft(storage, "draft-1").lesson.topic, "Newer local lesson");
 });

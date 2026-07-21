@@ -159,6 +159,26 @@ This log records material setup, development, testing, and delivery errors encou
 - The project uses Codex's bundled Node executable in this environment because `node` and `npm` are not globally available.
 - Curriculum standards still require educator review and authoritative source/version metadata before release.
 
+## 2026-07-21 — Sprint 6 engineering pass
+
+### Local drafts needed a user-controlled recovery path
+
+- **Observed risk:** Clearing browser data or changing profiles could remove all local drafts.
+- **Response:** Added portable JSON Backup and Restore controls with schema validation and newest-copy-wins merging.
+- **Status:** Resolved for user-managed recovery; browser-local storage limitations remain documented.
+
+### Diagnostics could accidentally collect lesson content
+
+- **Observed risk:** General error-message logging could capture a teacher-entered topic or note.
+- **Response:** Added a bounded local log that accepts only approved event codes, timestamps, and the application version. Raw messages, lesson content, URLs, and user identifiers are excluded.
+- **Status:** Resolved and covered by diagnostics tests.
+
+### Pilot phone status text exceeded the viewport by one pixel
+
+- **Observed defect:** At a 390-pixel viewport, the non-wrapping generated-status badge extended the document width to 391 pixels.
+- **Response:** Allowed result-status text to wrap at the phone breakpoint while retaining contained table scrolling.
+- **Status:** Resolved; live re-verification confirmed document width equals the viewport.
+
 ## 2026-07-21 — Sprints 4 and 5 completion
 
 ### Teacher edits were not part of the saved or printed artifact

@@ -4,7 +4,7 @@ An open-source, browser-native prototype that creates inquiry-based lesson direc
 
 ## Current status
 
-Sprints 1 through 5 are complete. The supplied concept is now a modular, responsive, accessible lesson-direction builder with deterministic generation, validation, provisional standards filtering, teacher editing, local draft management, and classroom-ready print and copy workflows.
+Sprints 1 through 5 are complete, and the Sprint 6 engineering pass is complete. The project is a pilot candidate pending educator curriculum review, cross-browser checks, and teacher usability sessions. It now includes deterministic generation, validation, provisional standards filtering, teacher editing, local draft management, portable backups, privacy-safe local diagnostics, and classroom-ready print and copy workflows.
 
 Grade selections now narrow the available subjects and standards using a documented provisional mapping. Mismatched grade, subject, standard, and duration combinations are rejected before generation. These mappings remain pending educator verification.
 
@@ -15,6 +15,8 @@ Each power skill also produces a topic-specific learning objective and three mea
 Teachers can revise the inquiry question, learning objective, success criteria, all teacher and student actions, and stage examples. They can also add teacher notes and a source/accessibility reminder. Unsaved edits trigger warnings before regeneration, draft replacement, or leaving the page.
 
 Device-local drafts support Save, Save As, Load, Rename, Duplicate, and Delete. The versioned draft schema migrates earlier local drafts by adding the new planning fields. Drafts do not leave the device or require an account.
+
+Use **Backup** to download all local drafts as JSON and **Restore** to merge a backup into the current browser. When draft identities collide, the newest updated copy is retained. The application keeps at most 20 local diagnostic entries containing only an approved event code, timestamp, and application version—never lesson content.
 
 ## Printable summary
 
@@ -51,3 +53,5 @@ npm test
 See [LESSON_PLANNER_AGILE_CODE_PLAN.md](LESSON_PLANNER_AGILE_CODE_PLAN.md) for the complete sprint roadmap.
 
 Material setup and development problems are recorded in [docs/development-log.md](docs/development-log.md).
+
+Pilot materials are in [docs/pilot-test-report.md](docs/pilot-test-report.md), [docs/pilot-feedback-form.md](docs/pilot-feedback-form.md), [docs/pilot-backlog.md](docs/pilot-backlog.md), and [docs/support-and-backup.md](docs/support-and-backup.md).

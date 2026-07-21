@@ -18,7 +18,7 @@ In a few minutes, a teacher can produce, revise, save, and export a standards-al
 
 ### Current implementation status
 
-Sprints 1 through 5 are implemented on the `codex/work` branch. Teachers can generate deterministic lesson direction, edit every instructional field, add planning notes, save and manage local drafts, and open a print-ready summary that preserves their revisions. The summary supports plain-text copying and browser Print / Save as PDF with letter-size guidance. Curriculum review and the Sprint 6 pilot-quality pass remain open.
+Sprints 1 through 5 and the Sprint 6 engineering pass are implemented on `codex/work`. The application includes editable deterministic lesson direction, local draft management, portable backup/restore, content-free local diagnostics, copy, and print/PDF. The pilot remains awaiting educator curriculum review, cross-browser confirmation, and teacher usability sessions.
 
 ## 2. MVP Boundary
 
@@ -396,6 +396,8 @@ Produce a clean lesson-direction artifact teachers can use or share.
 - Output remains understandable in grayscale.
 
 ## Sprint 6 — Quality, Accessibility, and Pilot Release
+
+**Status: Engineering complete — external pilot validation pending**
 
 ### Goal
 
