@@ -7,7 +7,7 @@ Lesson Assistant is intentionally browser-native and dependency-free at runtime.
 Requirements:
 
 - Node.js 20 or newer for verification
-- Python 3 or another static server for local browser testing
+- Node.js static server included with the project
 
 ## Before changing code
 
@@ -23,7 +23,7 @@ npm run check
 npm test
 npx playwright install chromium
 npm run test:e2e
-python3 -m http.server 4173
+npm run dev
 ```
 
 Open `http://localhost:4173/`; use `localhost`, not `127.0.0.1`, for the in-app browser on this development machine.

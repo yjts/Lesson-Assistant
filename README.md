@@ -28,7 +28,7 @@ Browser drafts are also local to the current browser profile and may be lost if 
 
 ## Run locally
 
-Requirements: Python 3 for the local server and Node.js 20 or newer for automated tests.
+Requirement: Node.js 20 or newer for the local server and automated tests.
 
 ```sh
 npm run dev

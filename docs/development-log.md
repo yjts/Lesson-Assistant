@@ -188,6 +188,12 @@ Authoritative CDE source, adoption, page-review, and application source-check me
 - **Response:** Removed the extra pnpm setup action, generated `package-lock.json`, and changed CI to the standard `npm ci` flow on Node 22 with current checkout/setup actions.
 - **Status:** Superseded configuration; the replacement run must pass before the increment is considered complete.
 
+### Second expanded CI run failed installing Chromium system packages
+
+- **Observed state:** GitHub Actions run `29871348877` passed npm installation, syntax checks, and unit tests, then failed during `playwright install --with-deps chromium`.
+- **Response:** Switched the job to the version-matched official Playwright Noble container, removed runtime apt installation, and replaced the Python test server with the project-owned Node static server.
+- **Status:** Replacement configuration pending remote verification.
+
 ## 2026-07-21 — Standards provenance pass
 
 ### Framework and content-standard provenance were conflated
