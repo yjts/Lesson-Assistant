@@ -182,6 +182,12 @@ Authoritative CDE source, adoption, page-review, and application source-check me
 - **Decision:** Pinned `@playwright/test` 1.61.0 as development-only, with Apache-2.0 licensing recorded in `CONTRIBUTING.md`. It is not part of the teacher-facing runtime.
 - **Scope:** CI installs Chromium only. The tests cover teacher edits through printable summary, phone overflow containment, and privacy-safe diagnostics.
 
+### First expanded CI run failed during pnpm installation
+
+- **Observed state:** GitHub Actions run `29871224312` failed at `pnpm install --frozen-lockfile` before syntax or test execution; the same lockfile installed successfully in a clean local directory.
+- **Response:** Removed the extra pnpm setup action, generated `package-lock.json`, and changed CI to the standard `npm ci` flow on Node 22 with current checkout/setup actions.
+- **Status:** Superseded configuration; the replacement run must pass before the increment is considered complete.
+
 ## 2026-07-21 — Standards provenance pass
 
 ### Framework and content-standard provenance were conflated

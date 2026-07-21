@@ -17,20 +17,16 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
-
-      - name: Use pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 11.9.0
+          node-version: 22
+          cache: npm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Check JavaScript syntax
         run: npm run check
@@ -39,7 +35,7 @@ jobs:
         run: npm test
 
       - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run browser workflow tests
-        run: pnpm run test:e2e
+        run: npm run test:e2e
