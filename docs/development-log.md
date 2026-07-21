@@ -184,6 +184,12 @@ Authoritative CDE source, adoption, page-review, and application source-check me
 - **Response:** Added a bounded local log that accepts only approved event codes, timestamps, and the application version. Raw messages, lesson content, URLs, and user identifiers are excluded.
 - **Status:** Resolved and covered by diagnostics tests.
 
+### Support diagnostics originally required developer access
+
+- **Observed limitation:** The privacy-safe local entries existed but teachers and support staff could not inspect or clear them from the interface.
+- **Response:** Added an accessible Support diagnostics disclosure with newest-first entries, an empty state, and a clear action. Added a 5 MB pre-read limit for backup restoration.
+- **Status:** Resolved and covered by interface-contract tests.
+
 ### Pilot phone status text exceeded the viewport by one pixel
 
 - **Observed defect:** At a 390-pixel viewport, the non-wrapping generated-status badge extended the document width to 391 pixels.

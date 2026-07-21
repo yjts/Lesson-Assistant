@@ -6,12 +6,16 @@ Lesson Assistant stores drafts in the current browser profile. Drafts can contai
 
 Local diagnostics are separate from drafts. The application retains at most 20 entries, each containing only an approved event code, timestamp, and application version. Diagnostics never include lesson inputs, generated text, teacher notes, URLs, account identifiers, or student information.
 
+Open **Support diagnostics** under Saved drafts to inspect these entries. Select **Clear diagnostics** to remove them from the browser.
+
 ## Back up and restore
 
 1. In **Saved drafts**, select **Backup**.
 2. Store the downloaded JSON file in an approved location.
 3. To recover drafts, select **Restore** and choose that JSON file.
 4. Restore merges drafts by identity. When both copies have the same identity, the most recently updated copy wins.
+
+Restore accepts supported Lesson Assistant JSON backups up to 5 MB. Larger files are rejected before their contents are read.
 
 Back up before clearing browser data, resetting a browser profile, changing devices, or ending a pilot.
 

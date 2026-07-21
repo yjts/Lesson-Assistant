@@ -2,10 +2,11 @@ import { generateLesson } from "./generator.js?v=0.7.0";
 import { createAppState, initialLessonInput } from "./state.js?v=0.7.0";
 import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.9.0";
 import { validateLessonInput } from "./validation.js?v=0.9.0";
-import { recordDiagnostic } from "./diagnostics.js?v=0.8.0";
+import { clearDiagnostics, readDiagnostics, recordDiagnostic } from "./diagnostics.js?v=0.10.0";
 import { deleteDraft, duplicateDraft, exportDraftBackup, getDraft, importDraftBackup, listDrafts, renameDraft, saveDraft } from "./storage.js?v=0.8.0";
 
 const SUMMARY_STORAGE_KEY = "lesson-assistant:print-summary:v1";
+const MAX_BACKUP_BYTES = 5 * 1024 * 1024;
 
 const form = document.querySelector("#lesson-form");
 const fields = Object.fromEntries(["grade", "subject", "topic", "skill", "standard", "duration"].map((id) => [id, document.querySelector(`#${id}`)]));
@@ -156,6 +157,16 @@ function generateFromForm(event, options = {}) {
 function setDraftStatus(message, isError = false) {
   draftControls.status.textContent = message;
   draftControls.status.classList.toggle("is-error", isError);
+}
+
+function refreshDiagnostics() {
+  const list = document.querySelector("#diagnostics-list");
+  const entries = readDiagnostics(localStorage).slice().reverse();
+  list.replaceChildren(...(entries.length ? entries.map((entry) => {
+    const item = document.createElement("li");
+    item.textContent = `${new Date(entry.occurredAt).toLocaleString()} · ${entry.code} · app ${entry.appVersion}`;
+    return item;
+  }) : [Object.assign(document.createElement("li"), { textContent: "No diagnostic events recorded." })]));
 }
 
 function refreshDraftList(selectedId = "") {
@@ -324,6 +335,7 @@ draftControls.restoreFile.addEventListener("change", async () => {
   const file = draftControls.restoreFile.files?.[0];
   if (!file) return;
   try {
+    if (file.size > MAX_BACKUP_BYTES) throw new Error("The selected backup is larger than the 5 MB restore limit.");
     const result = importDraftBackup(localStorage, await file.text());
     refreshDraftList();
     setDraftStatus(`Backup restored. ${result.total} draft${result.total === 1 ? "" : "s"} available on this device.`);
@@ -333,6 +345,15 @@ draftControls.restoreFile.addEventListener("change", async () => {
   } finally {
     draftControls.restoreFile.value = "";
   }
+});
+
+document.querySelector("#diagnostics-panel").addEventListener("toggle", (event) => {
+  if (event.currentTarget.open) refreshDiagnostics();
+});
+document.querySelector("#clear-diagnostics").addEventListener("click", () => {
+  clearDiagnostics(localStorage);
+  refreshDiagnostics();
+  document.querySelector("#diagnostics-status").textContent = "Local diagnostics cleared.";
 });
 
 draftControls.duplicate.addEventListener("click", () => {
@@ -379,6 +400,7 @@ document.querySelector("#reset-lesson").addEventListener("click", () => {
 });
 generateFromForm();
 refreshDraftList();
+refreshDiagnostics();
 
 window.addEventListener("beforeunload", (event) => {
   if (!appState.get().dirty) return;

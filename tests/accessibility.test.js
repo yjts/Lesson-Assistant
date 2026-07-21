@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+const appScript = await readFile(new URL("../src/app.js", import.meta.url), "utf8");
 
 test("provides a keyboard skip link and labeled form controls", () => {
   assert.match(html, /class="skip-link" href="#lesson-form"/);
@@ -27,4 +28,15 @@ test("labels editable teacher planning fields", () => {
   assert.match(html, /<label[^>]*for="teacher-notes">Teacher notes<\/label>/);
   assert.match(html, /<label for="source-reminder">Source and accessibility reminder<\/label>/);
   assert.match(html, /id="reset-lesson"[^>]*>Reset teacher edits<\/button>/);
+});
+
+test("exposes privacy-safe support diagnostics controls", () => {
+  assert.match(html, /id="diagnostics-panel"[^>]*>[\s\S]*<summary>Support diagnostics<\/summary>/);
+  assert.match(html, /id="clear-diagnostics"[^>]*>Clear diagnostics<\/button>/);
+  assert.match(html, /id="diagnostics-status"[^>]*role="status"[^>]*aria-live="polite"/);
+});
+
+test("guards backup restore size before reading file contents", () => {
+  assert.match(appScript, /MAX_BACKUP_BYTES = 5 \* 1024 \* 1024/);
+  assert.match(appScript, /file\.size > MAX_BACKUP_BYTES/);
 });

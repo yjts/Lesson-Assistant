@@ -6,8 +6,8 @@ Candidate branch: `codex/work`
 ## Automated verification
 
 - JavaScript syntax checks cover all application modules.
-- 34 tests cover generation, timing, standards filtering, validation, state, editable draft persistence, schema migration, backup/restore, content-free diagnostics, print structure, accessibility contracts, and the primary save-and-restore workflow.
-- Current result: 34 passed, 0 failed.
+- 37 tests cover generation, timing, standards filtering and provenance, validation, state, editable draft persistence, schema migration, backup/restore safeguards, content-free diagnostics, print structure, accessibility contracts, and the primary save-and-restore workflow.
+- Current result: 37 passed, 0 failed.
 
 ## Live workflow verification
 

@@ -17,7 +17,6 @@
 
 ## P2 — Consider after pilot evidence
 
-- Add a user-visible diagnostics viewer and clear action if support needs it.
 - Add more state or district standards only after curriculum ownership is defined.
 - Add shared templates only if teachers demonstrate a repeated sharing need.
 - Evaluate optional self-hosted accounts only if portable local drafts are insufficient.

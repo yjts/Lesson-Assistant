@@ -80,6 +80,13 @@
               <input id="restore-file" class="sr-only" type="file" accept="application/json,.json" />
               <p id="draft-status" class="draft-status" role="status" aria-live="polite">Drafts are stored only in this browser.</p>
               <p class="draft-status">Back up drafts before clearing browser data. Local diagnostics contain only error codes and times.</p>
+              <details id="diagnostics-panel" class="diagnostics-panel">
+                <summary>Support diagnostics</summary>
+                <p>These local entries never include lesson content or teacher notes.</p>
+                <ol id="diagnostics-list"><li>No diagnostic events recorded.</li></ol>
+                <button id="clear-diagnostics" class="text-button" type="button">Clear diagnostics</button>
+                <p id="diagnostics-status" class="draft-status" role="status" aria-live="polite"></p>
+              </details>
             </section>
           </form>
         </aside>
@@ -140,6 +147,6 @@
       </div>
     </main>
 
-    <script type="module" src="src/app.js?v=0.9.0"></script>
+    <script type="module" src="src/app.js?v=0.10.0"></script>
   </body>
 </html>
