@@ -21,3 +21,9 @@ test("describes the generated result and table", () => {
   assert.match(html, /<caption>[^<]*six-stage inquiry lesson direction/i);
 });
 
+test("labels editable teacher planning fields", () => {
+  assert.match(html, /id="inquiry-question"[^>]*contenteditable="true"[^>]*aria-label="Edit inquiry question"/);
+  assert.match(html, /<label[^>]*for="teacher-notes">Teacher notes<\/label>/);
+  assert.match(html, /<label for="source-reminder">Source and accessibility reminder<\/label>/);
+  assert.match(html, /id="reset-lesson"[^>]*>Reset teacher edits<\/button>/);
+});

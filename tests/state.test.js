@@ -17,5 +17,10 @@ test("state tracks editing and generated transitions", () => {
   state.setLesson({ ...state.get().input, inquiryQuestion: "Why?", stages: [] });
   assert.equal(state.get().status, "generated");
   assert.equal(state.get().lesson.topic, "Constitutional Convention");
+  state.editLesson({ ...state.get().lesson, inquiryQuestion: "Teacher revision?" });
+  assert.equal(state.get().dirty, true);
+  assert.equal(state.get().status, "edited");
+  state.markSaved("draft-1");
+  assert.equal(state.get().dirty, false);
+  assert.equal(state.get().activeDraftId, "draft-1");
 });
-

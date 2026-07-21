@@ -65,7 +65,9 @@ export function generateLesson(input) {
     topic,
     inquiryQuestion,
     ...learningOutcome,
-    templateVersion: "0.4.0",
+    teacherNotes: "",
+    sourceReminder: "Confirm that all classroom sources are accessible, age-appropriate, and accurately represented.",
+    templateVersion: "0.7.0",
     stages: [
       ["1. Inquiry opener", "Show an image, quotation, or opening question.", "Think independently and give an initial response.", inquiryQuestion],
       ["2. Short instruction", `Give the essential background for ${topic}.`, "Listen and identify the central issue.", `Provide only the context students need to begin investigating ${topic}.`],

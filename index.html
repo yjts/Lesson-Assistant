@@ -15,7 +15,7 @@
         <h1>Inquiry Lesson Direction Builder</h1>
         <p>A focused planning tool for inquiry and mastery-based lessons.</p>
       </div>
-      <span class="badge">Sprint 4 in progress</span>
+      <span class="badge">Sprints 4–5 complete</span>
     </header>
 
     <main class="page">
@@ -63,10 +63,12 @@
             <p class="helper">This tool provides direction, not a finished lesson. Review wording, sources, and supports for your students.</p>
 
             <section class="draft-panel" aria-labelledby="draft-title">
-              <div class="draft-heading"><h3 id="draft-title">Saved drafts</h3><button id="save-draft" class="text-button" type="button">Save current</button></div>
+              <div class="draft-heading"><h3 id="draft-title">Saved drafts</h3></div>
               <label class="sr-only" for="draft-select">Saved lesson drafts</label>
               <select id="draft-select" aria-describedby="draft-status"><option value="">No saved drafts</option></select>
               <div class="draft-actions">
+                <button id="save-draft" class="secondary-button" type="button">Save</button>
+                <button id="save-as-draft" class="secondary-button" type="button">Save as</button>
                 <button id="load-draft" class="secondary-button" type="button" disabled>Load</button>
                 <button id="rename-draft" class="secondary-button" type="button" disabled>Rename</button>
                 <button id="duplicate-draft" class="secondary-button" type="button" disabled>Duplicate</button>
@@ -82,6 +84,7 @@
             <div><p class="eyebrow">Step 2</p><h2 id="result-title">Lesson direction</h2></div>
             <div class="result-actions">
               <span id="result-status" class="status" role="status" aria-live="polite">Ready to review</span>
+              <button id="reset-lesson" class="secondary-button" type="button">Reset teacher edits</button>
               <a id="summary-link" class="secondary-button" href="summary.html">Open printable summary</a>
             </div>
           </div>
@@ -90,13 +93,13 @@
 
           <section class="inquiry-block" aria-labelledby="inquiry-label">
             <p id="inquiry-label">Inquiry question</p>
-            <h3 id="inquiry-question"></h3>
+            <h3 id="inquiry-question" class="editable" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Edit inquiry question"></h3>
           </section>
 
           <section class="outcome-block" aria-labelledby="objective-label">
             <div>
               <p id="objective-label" class="eyebrow">Learning objective</p>
-              <h3 id="learning-objective"></h3>
+              <h3 id="learning-objective" class="editable" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Edit learning objective"></h3>
             </div>
             <div>
               <p class="eyebrow">Success criteria</p>
@@ -115,6 +118,17 @@
               <tbody id="structure-rows"></tbody>
             </table>
           </div>
+
+          <section class="planning-notes" aria-labelledby="planning-notes-title">
+            <div>
+              <label id="planning-notes-title" for="teacher-notes">Teacher notes</label>
+              <textarea id="teacher-notes" rows="4" placeholder="Add adaptations, materials, grouping, or follow-up notes."></textarea>
+            </div>
+            <div>
+              <label for="source-reminder">Source and accessibility reminder</label>
+              <textarea id="source-reminder" rows="4"></textarea>
+            </div>
+          </section>
 
           <div class="takeaway"><strong>Teacher takeaway</strong><p>The content stays central, while students investigate, make claims, apply learning, and demonstrate mastery.</p></div>
         </section>

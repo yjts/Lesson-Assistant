@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DRAFT_STORAGE_KEY, DraftStorageError, deleteDraft, duplicateDraft, getDraft, listDrafts, renameDraft, saveDraft } from "../src/storage.js";
+import { DRAFT_SCHEMA_VERSION, DRAFT_STORAGE_KEY, DraftStorageError, deleteDraft, duplicateDraft, getDraft, listDrafts, renameDraft, saveDraft } from "../src/storage.js";
 
 function memoryStorage(initial = {}) {
   const values = new Map(Object.entries(initial));
@@ -35,6 +35,14 @@ test("reports corrupted local draft data", () => {
   assert.throws(() => listDrafts(storage), DraftStorageError);
 });
 
+test("migrates version 1 drafts with editable planning fields", () => {
+  const legacy = { version: 1, drafts: [{ id: "old", name: "Legacy", createdAt: "2026-07-20T10:00:00.000Z", updatedAt: "2026-07-20T10:00:00.000Z", lesson }] };
+  const [draft] = listDrafts(memoryStorage({ [DRAFT_STORAGE_KEY]: JSON.stringify(legacy) }));
+  assert.equal(draft.schemaVersion, DRAFT_SCHEMA_VERSION);
+  assert.equal(draft.lesson.teacherNotes, "");
+  assert.match(draft.lesson.sourceReminder, /accessible/);
+});
+
 test("renames a draft without changing its content or creation time", () => {
   const storage = memoryStorage();
   saveDraft(storage, lesson, { id: "draft-1", name: "Original", now: "2026-07-20T10:00:00.000Z" });
@@ -51,6 +59,6 @@ test("duplicates a draft under a new identity", () => {
   const duplicate = duplicateDraft(storage, "draft-1", { id: "draft-2", now: "2026-07-21T10:00:00.000Z" });
   assert.equal(duplicate.id, "draft-2");
   assert.equal(duplicate.name, "Original (copy)");
-  assert.deepEqual(duplicate.lesson, lesson);
+  assert.deepEqual(duplicate.lesson, { ...lesson, teacherNotes: "", sourceReminder: "Confirm that all classroom sources are accessible, age-appropriate, and accurately represented." });
   assert.equal(listDrafts(storage).length, 2);
 });

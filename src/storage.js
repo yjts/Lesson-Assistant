@@ -1,4 +1,5 @@
 export const DRAFT_STORAGE_KEY = "lesson-assistant:drafts:v1";
+export const DRAFT_SCHEMA_VERSION = 2;
 
 export class DraftStorageError extends Error {
   constructor(message, cause) {
@@ -8,14 +9,28 @@ export class DraftStorageError extends Error {
 }
 
 function emptyStore() {
-  return { version: 1, drafts: [] };
+  return { version: DRAFT_SCHEMA_VERSION, drafts: [] };
+}
+
+function migrateLesson(lesson) {
+  return {
+    ...lesson,
+    teacherNotes: lesson.teacherNotes || "",
+    sourceReminder: lesson.sourceReminder || "Confirm that all classroom sources are accessible, age-appropriate, and accurately represented."
+  };
 }
 
 function parseStore(value) {
   if (!value) return emptyStore();
   try {
     const parsed = JSON.parse(value);
-    if (parsed?.version !== 1 || !Array.isArray(parsed.drafts)) throw new Error("Unsupported draft data shape");
+    if (![1, DRAFT_SCHEMA_VERSION].includes(parsed?.version) || !Array.isArray(parsed.drafts)) throw new Error("Unsupported draft data shape");
+    if (parsed.version === 1) {
+      return {
+        version: DRAFT_SCHEMA_VERSION,
+        drafts: parsed.drafts.map((draft) => ({ ...draft, lesson: migrateLesson(draft.lesson), schemaVersion: DRAFT_SCHEMA_VERSION }))
+      };
+    }
     return parsed;
   } catch (error) {
     throw new DraftStorageError("Saved drafts could not be read. The local draft data may be damaged or outdated.", error);
@@ -35,9 +50,10 @@ export function saveDraft(storage, lesson, options = {}) {
   const draft = {
     id,
     name: options.name?.trim() || `${lesson.topic} — ${lesson.grade}`,
+    schemaVersion: DRAFT_SCHEMA_VERSION,
     createdAt: now,
     updatedAt: now,
-    lesson: structuredClone(lesson)
+    lesson: structuredClone(migrateLesson(lesson))
   };
   const existingIndex = store.drafts.findIndex((item) => item.id === id);
   if (existingIndex >= 0) {

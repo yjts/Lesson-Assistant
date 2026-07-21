@@ -1,8 +1,10 @@
-import { generateLesson } from "./generator.js?v=0.5.0";
-import { createAppState, initialLessonInput } from "./state.js?v=0.5.0";
-import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.5.0";
-import { validateLessonInput } from "./validation.js?v=0.5.0";
-import { deleteDraft, duplicateDraft, getDraft, listDrafts, renameDraft, saveDraft } from "./storage.js?v=0.6.0";
+import { generateLesson } from "./generator.js?v=0.7.0";
+import { createAppState, initialLessonInput } from "./state.js?v=0.7.0";
+import { getStandards, getSubjects, grades, powerSkills, standardsCatalogMeta } from "./standards.js?v=0.7.0";
+import { validateLessonInput } from "./validation.js?v=0.7.0";
+import { deleteDraft, duplicateDraft, getDraft, listDrafts, renameDraft, saveDraft } from "./storage.js?v=0.7.0";
+
+const SUMMARY_STORAGE_KEY = "lesson-assistant:print-summary:v1";
 
 const form = document.querySelector("#lesson-form");
 const fields = Object.fromEntries(["grade", "subject", "topic", "skill", "standard", "duration"].map((id) => [id, document.querySelector(`#${id}`)]));
@@ -10,6 +12,7 @@ const appState = createAppState();
 const draftControls = {
   select: document.querySelector("#draft-select"),
   save: document.querySelector("#save-draft"),
+  saveAs: document.querySelector("#save-as-draft"),
   load: document.querySelector("#load-draft"),
   rename: document.querySelector("#rename-draft"),
   duplicate: document.querySelector("#duplicate-draft"),
@@ -68,8 +71,8 @@ function summaryItem(label, value) {
   return wrapper;
 }
 
-function render(lesson) {
-  appState.setLesson(lesson);
+function render(lesson, options = {}) {
+  appState.setLesson(lesson, options);
   document.querySelector("#summary").replaceChildren(
     summaryItem("Grade", lesson.grade), summaryItem("Subject", lesson.subject),
     summaryItem("Power skill", lesson.skill), summaryItem("Standard", lesson.standard),
@@ -80,6 +83,10 @@ function render(lesson) {
   document.querySelector("#success-criteria").replaceChildren(...lesson.successCriteria.map((criterion) => {
     const item = document.createElement("li");
     item.textContent = criterion;
+    item.className = "editable";
+    item.contentEditable = "true";
+    item.setAttribute("role", "textbox");
+    item.setAttribute("aria-label", "Edit success criterion");
     return item;
   }));
   document.querySelector("#example-heading").textContent = `${lesson.topic} example`;
@@ -92,11 +99,19 @@ function render(lesson) {
       else if (index === 1) cell.className = "time-cell";
       else cell.textContent = value;
       if (index === 1) cell.textContent = value;
+      if (index >= 2) {
+        cell.className = "editable-cell";
+        cell.contentEditable = "true";
+        cell.setAttribute("role", "textbox");
+        cell.setAttribute("aria-label", `Edit ${["teacher action", "student action", "example"][index - 2]} for ${stage[0]}`);
+      }
       row.append(cell);
     });
     return row;
   }));
-  document.querySelector("#result-status").textContent = `Generated ${lesson.topic}. Ready to review.`;
+  document.querySelector("#teacher-notes").value = lesson.teacherNotes || "";
+  document.querySelector("#source-reminder").value = lesson.sourceReminder || "";
+  document.querySelector("#result-status").textContent = options.dirty ? "Loaded teacher-edited lesson." : `Generated ${lesson.topic}. Ready to review and edit.`;
   const parameters = new URLSearchParams({
     grade: lesson.grade,
     subject: lesson.subject,
@@ -105,12 +120,18 @@ function render(lesson) {
     standard: lesson.standard,
     duration: String(lesson.duration)
   });
+  try { sessionStorage.setItem(SUMMARY_STORAGE_KEY, JSON.stringify(lesson)); } catch {}
   document.querySelector("#summary-link").href = `summary.html?${parameters}`;
   document.body.dataset.appState = appState.get().status;
 }
 
-function generateFromForm(event) {
+function confirmReplace(message) {
+  return !appState.get().dirty || window.confirm(message);
+}
+
+function generateFromForm(event, options = {}) {
   event?.preventDefault();
+  if (event && !options.skipConfirmation && !confirmReplace("Regenerate this lesson? Your unsaved teacher edits will be replaced.")) return;
   const error = document.querySelector("#form-error");
   const input = readInput();
   const validation = validateLessonInput(input);
@@ -123,7 +144,8 @@ function generateFromForm(event) {
     return;
   }
   error.hidden = true;
-  render(generateLesson(input));
+  appState.clearActiveDraft();
+  render(generateLesson(input), { activeDraftId: null });
   if (event) document.querySelector("#lesson-result").focus();
 }
 
@@ -164,7 +186,7 @@ function refreshDraftList(selectedId = "") {
   }
 }
 
-function restoreLessonInput(lesson) {
+function restoreLessonInput(lesson, activeDraftId = null) {
   fields.grade.value = lesson.grade;
   updateSubjects();
   fields.subject.value = lesson.subject;
@@ -173,8 +195,38 @@ function restoreLessonInput(lesson) {
   fields.skill.value = lesson.skill;
   fields.standard.value = lesson.standard;
   fields.duration.value = String(lesson.duration);
-  generateFromForm();
+  render(lesson, { activeDraftId, dirty: false });
 }
+
+function readEditedLesson() {
+  const lesson = appState.get().lesson;
+  if (!lesson) return null;
+  const rows = [...document.querySelectorAll("#structure-rows tr")];
+  return {
+    ...lesson,
+    inquiryQuestion: document.querySelector("#inquiry-question").textContent.trim(),
+    objective: document.querySelector("#learning-objective").textContent.trim(),
+    successCriteria: [...document.querySelectorAll("#success-criteria li")].map((item) => item.textContent.trim()),
+    stages: rows.map((row, index) => {
+      const cells = row.querySelectorAll("td");
+      return [lesson.stages[index][0], cells[2].textContent.trim(), cells[3].textContent.trim(), cells[4].textContent.trim(), lesson.stages[index][4]];
+    }),
+    teacherNotes: document.querySelector("#teacher-notes").value.trim(),
+    sourceReminder: document.querySelector("#source-reminder").value.trim()
+  };
+}
+
+function recordTeacherEdit() {
+  const lesson = readEditedLesson();
+  if (!lesson) return;
+  appState.editLesson(lesson);
+  try { sessionStorage.setItem(SUMMARY_STORAGE_KEY, JSON.stringify(lesson)); } catch {}
+  document.querySelector("#result-status").textContent = "Teacher edits not yet saved.";
+}
+
+document.querySelector("#lesson-result").addEventListener("input", (event) => {
+  if (event.target.matches("[contenteditable], textarea")) recordTeacherEdit();
+});
 
 draftControls.select.addEventListener("change", () => {
   const hasSelection = Boolean(draftControls.select.value);
@@ -185,10 +237,13 @@ draftControls.select.addEventListener("change", () => {
 });
 
 draftControls.save.addEventListener("click", () => {
-  const lesson = appState.get().lesson;
+  const state = appState.get();
+  const lesson = readEditedLesson();
   if (!lesson) return setDraftStatus("Generate a valid lesson before saving a draft.", true);
   try {
-    const draft = saveDraft(localStorage, lesson);
+    const existing = state.activeDraftId ? getDraft(localStorage, state.activeDraftId) : null;
+    const draft = saveDraft(localStorage, lesson, { id: existing?.id, name: existing?.name });
+    appState.markSaved(draft.id);
     refreshDraftList(draft.id);
     setDraftStatus(`Saved “${draft.name}” on this device.`);
   } catch (error) {
@@ -196,11 +251,28 @@ draftControls.save.addEventListener("click", () => {
   }
 });
 
+draftControls.saveAs.addEventListener("click", () => {
+  const lesson = readEditedLesson();
+  if (!lesson) return setDraftStatus("Generate a valid lesson before saving a draft.", true);
+  const suggested = `${lesson.topic} — ${lesson.grade}`;
+  const name = window.prompt("Name this new lesson draft:", suggested);
+  if (name === null) return;
+  try {
+    const draft = saveDraft(localStorage, lesson, { name });
+    appState.markSaved(draft.id);
+    refreshDraftList(draft.id);
+    setDraftStatus(`Saved new draft “${draft.name}”.`);
+  } catch (error) {
+    setDraftStatus(error.message, true);
+  }
+});
+
 draftControls.load.addEventListener("click", () => {
+  if (!confirmReplace("Load this draft? Your unsaved teacher edits will be replaced.")) return;
   try {
     const draft = getDraft(localStorage, draftControls.select.value);
     if (!draft) return setDraftStatus("The selected draft could not be found.", true);
-    restoreLessonInput(draft.lesson);
+    restoreLessonInput(draft.lesson, draft.id);
     setDraftStatus(`Loaded “${draft.name}”.`);
     document.querySelector("#lesson-result").focus();
   } catch (error) {
@@ -238,6 +310,7 @@ draftControls.delete.addEventListener("click", () => {
   if (!selectedId || !window.confirm(`Delete ${selectedLabel}? This cannot be undone.`)) return;
   try {
     deleteDraft(localStorage, selectedId);
+    if (appState.get().activeDraftId === selectedId) appState.clearActiveDraft();
     refreshDraftList();
     setDraftStatus("Draft deleted from this device.");
   } catch (error) {
@@ -254,5 +327,17 @@ fields.grade.addEventListener("change", () => { updateSubjects(); syncInputState
 fields.subject.addEventListener("change", () => { updateStandards(); syncInputState(); });
 Object.values(fields).forEach((field) => field.addEventListener("input", syncInputState));
 form.addEventListener("submit", generateFromForm);
+document.querySelector("#reset-lesson").addEventListener("click", () => {
+  if (!confirmReplace("Reset teacher edits? The generated lesson will be restored and unsaved revisions will be lost.")) return;
+  appState.clearActiveDraft();
+  render(generateLesson(readInput()), { activeDraftId: null });
+  document.querySelector("#lesson-result").focus();
+});
 generateFromForm();
 refreshDraftList();
+
+window.addEventListener("beforeunload", (event) => {
+  if (!appState.get().dirty) return;
+  event.preventDefault();
+  event.returnValue = "";
+});
