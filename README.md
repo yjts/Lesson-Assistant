@@ -8,7 +8,7 @@ Sprints 1 through 5 are complete, and the Sprint 6 engineering pass is complete.
 
 Grade selections now narrow the available subjects and standards using a documented provisional mapping. Mismatched grade, subject, standard, and duration combinations are rejected before generation. These mappings remain pending educator verification.
 
-Sprint 3 has started with deterministic duration-aware planning. Each 45-, 60-, 75-, or 90-minute lesson now divides the available time across the inquiry opener, short instruction, investigation, evidence-based thinking, application, and mastery check. The stage timings also appear in the printable summary.
+Sprint 3 is complete with deterministic, duration-aware planning. Each 45-, 60-, 75-, or 90-minute lesson divides the available time across the inquiry opener, short instruction, investigation, evidence-based thinking, application, and mastery check. The stage timings also appear in the printable summary.
 
 Each power skill also produces a topic-specific learning objective and three measurable success criteria. These outcomes appear in both the working lesson direction and printable summary.
 

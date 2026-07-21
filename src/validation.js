@@ -4,6 +4,7 @@ export function validateLessonInput(input) {
   const topic = input.topic.trim();
   if (!topic) return { valid: false, field: "topic", message: "Enter a topic before generating lesson direction." };
   if (topic.length < 3) return { valid: false, field: "topic", message: "Use at least three characters for the lesson topic." };
+  if (topic.length > 120) return { valid: false, field: "topic", message: "Keep the lesson topic to 120 characters or fewer." };
   if (!getSubjects(input.grade).includes(input.subject)) return { valid: false, field: "subject", message: "Choose a subject supported for the selected grade." };
   if (!input.standard) return { valid: false, field: "standard", message: "Choose an academic standard before generating." };
   if (!hasStandard(input.grade, input.subject, input.standard)) return { valid: false, field: "standard", message: "Choose a standard that matches the selected grade and subject." };

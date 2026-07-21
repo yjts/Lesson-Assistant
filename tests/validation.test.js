@@ -6,6 +6,7 @@ test("requires a meaningful topic", () => {
   const base = { grade: "Grade 8", subject: "U.S. History", standard: "CA HSS 8.1", duration: 60 };
   assert.equal(validateLessonInput({ ...base, topic: " " }).valid, false);
   assert.match(validateLessonInput({ ...base, topic: "A" }).message, /three characters/);
+  assert.match(validateLessonInput({ ...base, topic: "A".repeat(121) }).message, /120 characters/);
 });
 
 test("accepts a topic and standard", () => {

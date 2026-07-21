@@ -6,9 +6,9 @@ Candidate branch: `codex/work`
 ## Automated verification
 
 - JavaScript syntax checks cover all application modules.
-- 37 unit and contract tests cover generation, timing, standards filtering and provenance, validation, state, editable draft persistence, schema migration, backup/restore safeguards, content-free diagnostics, print structure, accessibility contracts, and the primary save-and-restore workflow.
+- 38 unit and contract tests cover deterministic generation, unusual and long topic handling, timing, standards filtering and provenance, validation, state, editable draft persistence, schema migration, backup/restore safeguards, content-free diagnostics, print structure, accessibility contracts, and the primary save-and-restore workflow.
 - 3 Playwright Chromium tests cover the complete edit/save/reload/summary handoff, 390-pixel overflow containment, and diagnostics viewing/clearing.
-- Current result: 40 checks passed, 0 failed.
+- Current result: 41 checks passed, 0 failed.
 
 ## Live workflow verification
 
