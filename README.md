@@ -43,6 +43,8 @@ npm run check
 npm test
 ```
 
+GitHub Actions runs both commands on every push and pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the review checklist and local browser workflow.
+
 ## Project principles
 
 - Teachers review and edit instructional decisions.
