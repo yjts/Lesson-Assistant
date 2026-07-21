@@ -1,5 +1,7 @@
-import { generateLesson } from "./generator.js?v=0.4.0";
-import { validateLessonInput } from "./validation.js?v=0.4.0";
+import { generateLesson } from "./generator.js?v=0.7.0";
+import { validateLessonInput } from "./validation.js?v=0.7.0";
+
+const SUMMARY_STORAGE_KEY = "lesson-assistant:print-summary:v1";
 
 const params = new URLSearchParams(window.location.search);
 const input = {
@@ -61,16 +63,53 @@ function renderSummary(lesson) {
     return item;
   }));
   document.querySelector("#print-stages").replaceChildren(...lesson.stages.map(stageCard));
+  document.querySelector("#print-teacher-notes").textContent = lesson.teacherNotes || "No additional teacher notes.";
+  document.querySelector("#print-source-reminder").textContent = lesson.sourceReminder || "Review all sources, supports, and instructional decisions before use.";
+  const requiredText = [lesson.inquiryQuestion, lesson.objective, ...lesson.successCriteria, ...lesson.stages.flatMap((stage) => stage.slice(1, 4))];
+  document.querySelector("#print-warning").hidden = requiredText.every((value) => String(value || "").trim());
+}
+
+function readStoredLesson() {
+  try {
+    const lesson = JSON.parse(sessionStorage.getItem(SUMMARY_STORAGE_KEY));
+    return lesson?.topic && Array.isArray(lesson.stages) ? lesson : null;
+  } catch {
+    return null;
+  }
+}
+
+function lessonAsText(lesson) {
+  const lines = [
+    `${lesson.topic} Lesson Direction`,
+    `${lesson.grade} | ${lesson.subject} | ${lesson.skill} | ${lesson.standard} | ${lesson.duration} minutes`,
+    "", `Inquiry question: ${lesson.inquiryQuestion}`, `Learning objective: ${lesson.objective}`,
+    "Success criteria:", ...lesson.successCriteria.map((criterion) => `- ${criterion}`), ""
+  ];
+  lesson.stages.forEach((stage) => lines.push(stage[0], `Time: ${stage[4]} minutes`, `Teacher: ${stage[1]}`, `Student: ${stage[2]}`, `Example: ${stage[3]}`, ""));
+  lines.push("Teacher notes:", lesson.teacherNotes || "None", "", "Source and accessibility reminder:", lesson.sourceReminder || "Review before classroom use.");
+  return lines.join("\n");
 }
 
 const validation = validateLessonInput(input);
-if (!validation.valid || !input.grade || !input.subject || !input.skill || !Number.isFinite(input.duration)) {
+const storedLesson = readStoredLesson();
+const lesson = storedLesson || (validation.valid ? generateLesson(input) : null);
+if (!lesson) {
   document.querySelector("#summary-content").hidden = true;
   document.querySelector("#summary-error").hidden = false;
   document.querySelector("#print-button").disabled = true;
 } else {
-  renderSummary(generateLesson(input));
+  renderSummary(lesson);
   document.querySelector("#printable-summary").focus();
 }
 
 document.querySelector("#print-button").addEventListener("click", () => window.print());
+document.querySelector("#copy-button").addEventListener("click", async () => {
+  if (!lesson) return;
+  const status = document.querySelector("#copy-status");
+  try {
+    await navigator.clipboard.writeText(lessonAsText(lesson));
+    status.textContent = "Lesson text copied.";
+  } catch {
+    status.textContent = "Copy was blocked. Select the lesson text and copy it manually.";
+  }
+});

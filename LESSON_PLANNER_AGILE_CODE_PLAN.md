@@ -18,7 +18,7 @@ In a few minutes, a teacher can produce, revise, save, and export a standards-al
 
 ### Current implementation status
 
-The Sprint 0 baseline and core Sprint 1 accessibility work are implemented locally. The printable-summary portion originally scheduled for Sprint 5 was brought forward: completed selections now open a dedicated summary page with a Print / Save as PDF action and letter-size print styling. Draft persistence and teacher editing remain future work.
+Sprints 1 through 5 are implemented on the `codex/work` branch. Teachers can generate deterministic lesson direction, edit every instructional field, add planning notes, save and manage local drafts, and open a print-ready summary that preserves their revisions. The summary supports plain-text copying and browser Print / Save as PDF with letter-size guidance. Curriculum review and the Sprint 6 pilot-quality pass remain open.
 
 ## 2. MVP Boundary
 
@@ -335,6 +335,8 @@ Generate consistent lesson direction from deterministic instructional rules.
 
 ## Sprint 4 — Teacher Editing and Draft Management
 
+**Status: Complete — 2026-07-21**
+
 ### Goal
 
 Allow teachers to turn generated direction into their own usable plan.
@@ -363,6 +365,8 @@ Allow teachers to turn generated direction into their own usable plan.
 - Failed storage operations produce a clear recovery message.
 
 ## Sprint 5 — Print, Export, and Classroom Usability
+
+**Status: Complete — 2026-07-21**
 
 ### Goal
 

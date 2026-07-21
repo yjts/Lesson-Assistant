@@ -122,13 +122,13 @@ This log records material setup, development, testing, and delivery errors encou
 - **Response:** Set repository-local identity to `yjts <yjts@users.noreply.github.com>` without changing global Git settings.
 - **Status:** Resolved locally. The user should confirm this identity is preferred before long-term contribution history grows.
 
-### Branch push lacks GitHub write authentication
+### Branch push initially lacked GitHub write authentication
 
 - **Operation:** `git push -u origin codex/work`.
 - **Observed error:** `could not read Username for 'https://github.com': Device not configured`.
 - **Cause:** The shell can read the repository but has no credential available for HTTPS writes.
 - **Response:** Preserved all work in local commits and continued development without retrying destructive or insecure credential workarounds.
-- **Status:** Open delivery blocker. Configure a GitHub credential helper, SSH key, or GitHub CLI login before pushing. Do not place a personal access token in source files or the remote URL.
+- **Status:** Resolved outside the original shell session; `codex/work` now tracks and matches `origin/codex/work`. Do not place a personal access token in source files or the remote URL.
 
 ### Push retry remained unauthenticated
 
@@ -136,7 +136,7 @@ This log records material setup, development, testing, and delivery errors encou
 - **Observed error:** `could not read Username for 'https://github.com': Device not configured`.
 - **Cause:** No GitHub HTTPS credential, credential helper entry, GitHub CLI login, or SSH key had been added since the prior attempt.
 - **Response:** Kept all work in local commits and continued development without exposing or embedding a token.
-- **Status:** Open; same delivery blocker as above.
+- **Status:** Historical; later repository inspection confirmed the branch was pushed successfully.
 
 ### Draft-delete browser click timed out after completing
 
@@ -156,6 +156,27 @@ This log records material setup, development, testing, and delivery errors encou
 
 ## Current open issues
 
-- GitHub write authentication is not configured, so local commits cannot yet be pushed.
 - The project uses Codex's bundled Node executable in this environment because `node` and `npm` are not globally available.
 - Curriculum standards still require educator review and authoritative source/version metadata before release.
+
+## 2026-07-21 — Sprints 4 and 5 completion
+
+### Teacher edits were not part of the saved or printed artifact
+
+- **Observed limitation:** Generated fields were read-only, and the summary regenerated from URL selections instead of carrying teacher revisions forward.
+- **Response:** Made inquiry, objective, success criteria, teacher actions, student actions, and examples editable; added teacher notes and a source/accessibility reminder; stored the full edited lesson in drafts and temporary summary handoff storage.
+- **Verification:** Edited inquiry and notes were saved in the live browser and reproduced exactly on the printable summary.
+- **Status:** Resolved.
+
+### Draft replacement could overwrite unsaved work
+
+- **Observed limitation:** Regeneration and loading had no dirty-state protection, and Save always created a new draft identity.
+- **Response:** Added explicit edited/saved state, before-unload protection, confirmation before regeneration or draft loading, update-in-place Save, distinct Save As, and a version 1 to version 2 draft migration.
+- **Status:** Resolved and covered by state and storage tests.
+
+### Printable handoff lacked copy and classroom guidance
+
+- **Observed limitation:** Print / Save as PDF was available, but teachers had no plain-text copy action, PDF settings guidance, notes, or source reminder in the output.
+- **Response:** Added accessible copy status, Letter/PDF instructions, printed notes and source reminders, and break-resistant print sections.
+- **Verification:** Copy completed in the live browser without console errors; print contracts remain covered by automated tests.
+- **Status:** Resolved.

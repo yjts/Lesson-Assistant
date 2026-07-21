@@ -11,8 +11,16 @@
   <body class="summary-page">
     <header class="summary-toolbar" aria-label="Summary actions">
       <a class="back-link" href="index.html">← Back to lesson builder</a>
-      <button id="print-button" class="primary-button print-button" type="button">Print / Save as PDF</button>
+      <div class="summary-actions">
+        <button id="copy-button" class="secondary-button" type="button">Copy lesson text</button>
+        <button id="print-button" class="primary-button print-button" type="button">Print / Save as PDF</button>
+      </div>
     </header>
+
+    <aside class="pdf-guidance" aria-label="PDF instructions">
+      <strong>Save a PDF:</strong> Select Print / Save as PDF, choose your browser’s PDF destination, use Letter paper, and keep background graphics enabled.
+      <span id="copy-status" role="status" aria-live="polite"></span>
+    </aside>
 
     <main id="printable-summary" class="print-sheet" tabindex="-1">
       <section id="summary-error" class="summary-error" role="alert" hidden>
@@ -32,6 +40,10 @@
         </header>
 
         <dl id="print-metadata" class="print-metadata"></dl>
+
+        <section id="print-warning" class="print-warning" role="note" hidden>
+          <strong>Review before use:</strong> One or more teacher-editable lesson fields are incomplete.
+        </section>
 
         <section class="print-inquiry" aria-labelledby="print-inquiry-label">
           <p id="print-inquiry-label">Inquiry question</p>
@@ -60,6 +72,11 @@
         <section class="print-takeaway">
           <h2>Teacher takeaway</h2>
           <p>The content stays central, while students investigate, make claims, apply learning, and demonstrate mastery.</p>
+        </section>
+
+        <section class="print-notes" aria-labelledby="print-notes-title">
+          <div><h2 id="print-notes-title">Teacher notes</h2><p id="print-teacher-notes"></p></div>
+          <div><h2>Source and accessibility reminder</h2><p id="print-source-reminder"></p></div>
         </section>
 
         <footer class="print-footer">

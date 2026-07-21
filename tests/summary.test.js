@@ -14,6 +14,9 @@ test("summary provides print and recovery actions", () => {
   assert.match(summaryHtml, /id="print-button"[^>]*>Print \/ Save as PDF</);
   assert.match(summaryHtml, /id="summary-error"[^>]*role="alert"/);
   assert.match(summaryHtml, /href="index\.html"/);
+  assert.match(summaryHtml, /id="copy-button"[^>]*>Copy lesson text</);
+  assert.match(summaryHtml, /Save a PDF:/);
+  assert.match(summaryHtml, /id="print-warning"[^>]*role="note"[^>]*hidden/);
 });
 
 test("summary script renders stage timing", async () => {
@@ -25,6 +28,8 @@ test("summary script renders stage timing", async () => {
 test("summary includes objective and success criteria regions", () => {
   assert.match(summaryHtml, /id="print-objective"/);
   assert.match(summaryHtml, /id="print-success-criteria"/);
+  assert.match(summaryHtml, /id="print-teacher-notes"/);
+  assert.match(summaryHtml, /id="print-source-reminder"/);
 });
 
 test("print stylesheet defines print media and letter output", () => {

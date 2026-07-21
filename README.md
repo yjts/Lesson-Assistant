@@ -4,7 +4,7 @@ An open-source, browser-native prototype that creates inquiry-based lesson direc
 
 ## Current status
 
-Sprint 2 is in progress: the supplied concept has been repaired and separated into maintainable HTML, CSS, state, curriculum data, generation, validation, and interface modules. The interface includes responsive behavior, keyboard navigation support, accessible validation, result announcements, and a described lesson table. Teachers can open a dedicated summary from their completed selections and print it or save it as a PDF. Application state now distinguishes edited selections from generated output, and the unverified standards catalog is visibly labeled. Generated content is deterministic and does not require an AI service.
+Sprints 1 through 5 are complete. The supplied concept is now a modular, responsive, accessible lesson-direction builder with deterministic generation, validation, provisional standards filtering, teacher editing, local draft management, and classroom-ready print and copy workflows.
 
 Grade selections now narrow the available subjects and standards using a documented provisional mapping. Mismatched grade, subject, standard, and duration combinations are rejected before generation. These mappings remain pending educator verification.
 
@@ -12,15 +12,15 @@ Sprint 3 has started with deterministic duration-aware planning. Each 45-, 60-, 
 
 Each power skill also produces a topic-specific learning objective and three measurable success criteria. These outcomes appear in both the working lesson direction and printable summary.
 
-Sprint 4 has started with device-local draft management. Teachers can save multiple generated lessons in the current browser, reload them after refreshing, and delete drafts they no longer need. Drafts do not leave the device or require an account.
+Teachers can revise the inquiry question, learning objective, success criteria, all teacher and student actions, and stage examples. They can also add teacher notes and a source/accessibility reminder. Unsaved edits trigger warnings before regeneration, draft replacement, or leaving the page.
 
-Saved drafts can also be renamed and duplicated, making it easier to preserve a working version before adapting it for another class or lesson length.
+Device-local drafts support Save, Save As, Load, Rename, Duplicate, and Delete. The versioned draft schema migrates earlier local drafts by adding the new planning fields. Drafts do not leave the device or require an account.
 
 ## Printable summary
 
-After generating lesson direction, select **Open printable summary**. The summary carries forward the grade, subject, topic, power skill, standard, duration, inquiry question, and all six instructional stages. Select **Print / Save as PDF**, then choose the browser's PDF destination.
+After generating or editing lesson direction, select **Open printable summary**. The summary preserves the current teacher-edited lesson, including planning notes and source reminders. Use **Copy lesson text** for a plain-text handoff, or select **Print / Save as PDF**, choose the browser's PDF destination, use Letter paper, and keep background graphics enabled.
 
-The selections are encoded in the summary page URL for this prototype. Do not include student information or other sensitive data in lesson topics.
+The summary uses temporary same-tab browser storage to preserve edits and retains URL selections as a recovery fallback. Do not include student information or other sensitive data in lesson topics or notes.
 
 Browser drafts are also local to the current browser profile and may be lost if site data is cleared. They are not synchronized across devices.
 
