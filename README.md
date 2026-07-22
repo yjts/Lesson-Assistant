@@ -31,7 +31,8 @@ Browser drafts are also local to the current browser profile and may be lost if 
 Requirement: Node.js 20 or newer for the local server and automated tests.
 
 ```sh
-npm run dev
+pnpm install --frozen-lockfile
+pnpm run dev
 ```
 
 Open `http://localhost:4173`.
@@ -39,12 +40,10 @@ Open `http://localhost:4173`.
 ## Verify
 
 ```sh
-npm run check
-npm test
-npm run test:e2e
+pnpm run verify
 ```
 
-Install the Chromium test browser once with `npx playwright install chromium`. GitHub Actions runs syntax, unit, and Chromium workflow tests on every push and pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the review checklist and local browser workflow.
+Install the Chromium test browser once with `pnpm exec playwright install chromium`. GitHub Actions runs syntax, unit, and Chromium workflow tests on every push and pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the review checklist and local browser workflow.
 
 ## Project principles
 

@@ -7,6 +7,7 @@ Lesson Assistant is intentionally browser-native and dependency-free at runtime.
 Requirements:
 
 - Node.js 20 or newer for verification
+- pnpm 11.9.0 (declared in `package.json`)
 - Node.js static server included with the project
 
 ## Before changing code
@@ -19,11 +20,12 @@ Requirements:
 ## Verify a change
 
 ```sh
-npm run check
-npm test
-npx playwright install chromium
-npm run test:e2e
-npm run dev
+pnpm install --frozen-lockfile
+pnpm run check
+pnpm test
+pnpm exec playwright install chromium
+pnpm run test:e2e
+pnpm run dev
 ```
 
 Open `http://localhost:4173/`; use `localhost`, not `127.0.0.1`, for the in-app browser on this development machine.
@@ -34,7 +36,7 @@ For interface changes, exercise generate, edit, save, reload, printable summary,
 
 - The change has one observable teacher outcome.
 - Logic changes include tests.
-- `npm run check`, `npm test`, and `npm run test:e2e` pass.
+- `pnpm run verify` passes.
 - Teacher-entered text is rendered with safe text APIs.
 - Keyboard focus, labels, live announcements, and phone overflow were considered.
 - Draft schema changes include migration and backup compatibility.
